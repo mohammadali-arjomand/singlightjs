@@ -5,22 +5,27 @@ class Singlight {
     }
 
     mount(selector) {
+        // helper log
         console.log("BOOTSTRAPER RUNNED");
+
         // select element by selector
         this.selector = document.querySelector(selector);
 
         // check selector is valid
         if (this.selector === null) {
+            // report error
             console.log("You should pass a valid selector");
         }
 
         // check root is valid
         if (this.property.root === undefined) {
+            // report error
             console.log("You should pass root property");
         }
 
         // check home is valid
         if (this.property.home === undefined) {
+            // report error
             console.log("You should pass home property");
         }
 
@@ -35,8 +40,8 @@ class Singlight {
     }
 
     urlBuilder(to) {
+        // helper log
         console.log("URL BUILDER RUNNED");
-        console.log(this.history);
 
         // update current url
         this.current = to;
@@ -49,7 +54,9 @@ class Singlight {
     }
 
     loader() {
+        // helper log
         console.log("LOADER RUNNED");
+
         // make request async function
         async function request(url, self) {
             try {
@@ -74,10 +81,12 @@ class Singlight {
                     self.renderer(text);
                 }
                 else {
+                    // report error
                     console.log("Request failed");
                 }
             }
             catch {
+                // report error
                 console.log("Request failed2");
             }
         }
@@ -87,7 +96,9 @@ class Singlight {
     }
 
     renderer(page) {
+        // helper log
         console.log("RENDERER RUNNED");
+
         // rendering page
         this.selector.innerHTML = page;
 
@@ -96,7 +107,9 @@ class Singlight {
     }
 
     scanner() {
+        // helper log
         console.log("SCANNER RUNNED");
+
         // scan links
         let links = document.querySelectorAll("a");
         links.forEach((link) => {
@@ -111,7 +124,9 @@ class Singlight {
     }
 
     eventHandler(event, target) {
+        // helper log
         console.log("EVENT HANDLER RUNNED");
+        
         // check target tag
         if (event.target.nodeName == "A") {
             // stop refresh
