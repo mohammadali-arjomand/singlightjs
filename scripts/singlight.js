@@ -87,7 +87,7 @@ class Singlight {
             }
             catch {
                 // report error
-                console.log("Request failed2");
+                console.log("Request failed");
             }
         }
 
