@@ -15,7 +15,9 @@ class Singlight {
             console.log("You should pass home property");
         }
 
+        
         this.current = this.property.root + "/../" + this.property.home;
+        this.history = [this.current];
         this.render();  
     }
 
@@ -48,7 +50,7 @@ class Singlight {
         let data = new FormData(form);
 
         if (form.action !== undefined) {
-            this.current = this.current + "/../" + form.action;
+            this.switcher(this.url(form.action));
             this.send(form.action, data);
         }
         else {
@@ -57,12 +59,11 @@ class Singlight {
     }
 
     redirect(url) {
-        this.current = this.current + "/../" + url;
+        this.switcher(this.url(url));
         this.render();
     }
 
     send(to, data) {
-        console.log(to);
         async function submit(to, data, parent) {
             try {
                 let response = await fetch(to, {
@@ -101,6 +102,16 @@ class Singlight {
             }
         }
         request(this.current, this.selector).then(e => this.scanner());
+    }
+
+    url(to) {
+        return this.current + "/../" + to;
+    }
+
+    switcher(newURL) {
+        this.current = newURL;
+        this.history.push(this.current);
+        console.log(this.history);
     }
 }
     
