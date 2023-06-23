@@ -6,6 +6,7 @@ It's a super-light-weight library. `< 1KB` for minified file. It's very fast and
 
 # Example
 [Click here](https://mohammadali-arjomand.github.io/singlightjs/example/) for see example
+It's recommended for using
 
 # How to install... ?
 ## with NPM
