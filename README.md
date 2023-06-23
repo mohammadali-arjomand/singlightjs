@@ -9,7 +9,11 @@ It's a super-light-weight library. Only `~1KB` for minified file. It's very fast
 coming soon...
 
 ## with Git
-coming soon...
+Clone repository in your project
+```
+$ git clone https://github.com/mohammadali-arjomand/singlightjs.git
+```
+and delete every files except `scripts/singlight.min.js`
 
 ## with CDN
 coming soon...
