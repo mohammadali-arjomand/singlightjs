@@ -19,7 +19,10 @@ $ git clone https://github.com/mohammadali-arjomand/singlightjs.git
 and delete every files except `scripts/singlight.min.js`
 
 ## with CDN
-coming soon...
+Use this CDN
+```html
+<script src="https://unpkg.com/@mohammadali-arjomand/singlightjs@1.0.0/scripts/singlight.min.js"></script>
+```
 
 ## with File
 Download `scripts/singlight.min.js` and use it.
