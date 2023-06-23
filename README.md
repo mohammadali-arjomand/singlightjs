@@ -19,7 +19,7 @@ Clone repository in your project
 ```
 $ git clone https://github.com/mohammadali-arjomand/singlightjs.git
 ```
-and delete every files except `scripts/singlight.min.js`
+and remove every files except `scripts/singlight.min.js`
 
 ## with CDN
 Use this CDN
@@ -30,7 +30,7 @@ Use this CDN
 ## with File
 Download `scripts/singlight.min.js` and use it.
 
-# How to use
+# How to use?
 First, write your Static-Elements (AppShell) and Dynamic-Element in `index.html`:
 ```html
 <!DOCTYPE html>
