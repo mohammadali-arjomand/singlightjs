@@ -1,0 +1,27 @@
+{
+  "name": "@mohammadali-arjomand/singlightjs",
+  "version": "1.0.0",
+  "description": "Singlight is a light-weight, open-source, free, powerfull and easy-to-use Javascript library for creating SPAs",
+  "main": "scripts/singlight.min.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohammadali-arjomand/singlightjs.git"
+  },
+  "keywords": [
+    "spa",
+    "single-page-application",
+    "light-weight"
+  ],
+  "author": "MohammadAli Arjomand",
+  "license": "MIT License",
+  "bugs": {
+    "url": "https://github.com/mohammadali-arjomand/singlightjs/issues"
+  },
+  "homepage": "https://github.com/mohammadali-arjomand/singlightjs#readme"
+}
