@@ -6,7 +6,10 @@ It's a super-light-weight library. `< 1KB` for minified file. It's very fast and
 
 # How to install... ?
 ## with NPM
-coming soon...
+Install with run this command
+```
+$ npm i @mohammadali-arjomand/singlightjs
+```
 
 ## with Git
 Clone repository in your project
