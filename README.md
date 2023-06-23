@@ -10,14 +10,14 @@ It's a super-light-weight library. `< 1KB` for minified file. It's very fast and
 # How to install... ?
 ## with NPM
 Install with run this command
-```
-$ npm i @mohammadali-arjomand/singlightjs
+```bash
+npm i @mohammadali-arjomand/singlightjs
 ```
 
 ## with Git
 Clone repository in your project
-```
-$ git clone https://github.com/mohammadali-arjomand/singlightjs.git
+```bash
+git clone https://github.com/mohammadali-arjomand/singlightjs.git
 ```
 and remove every files except `scripts/singlight.min.js`
 
