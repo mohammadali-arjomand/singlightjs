@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test - Singlight</title>
+</head>
+<body>
+    <!-- Static-Element -->
+    <header>Singlight</header>
+
+    <!-- Dynamic-Element -->
+    <div id="app"></div>
+
+    <!-- Static-Element -->
+    <footer>Copyright (©) 2023 Singlight</footer>
+</body>
+<script src="https://unpkg.com/@mohammadali-arjomand/singlightjs@1.0.0/scripts/singlight.min.js"></script>
+<script>
+    const app = new Singlight({
+        root: "https://mohammadali-arjomand.github.io/singlightjs/example",
+        home: "home.html"
+    });
+    app.mount("#app");
+</script>
+</html>
