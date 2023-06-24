@@ -1,166 +1,95 @@
 class Singlight {
-    constructor(property) {
-        // setting property
-        this.property = property;
-    }
-
     mount(selector) {
-        // helper log
-        console.log("BOOTSTRAPER RUNNED");
-
-        // select element by selector
-        this.selector = document.querySelector(selector);
-
-        // check selector is valid
-        if (this.selector === null) {
-            // report error
-            console.log("You should pass a valid selector");
-        }
-
-        // check root is valid
-        if (this.property.root === undefined) {
-            // report error
-            console.log("You should pass root property");
-        }
-
-        // check home is valid
-        if (this.property.home === undefined) {
-            // report error
-            console.log("You should pass home property");
-        }
-
-        // make current location
-        this.current = this.property.root + "/" + this.property.home;
-
-        // make history
-        this.history = [];
-
-        // bootstrapping lifecycle
-        this.urlBuilder(this.current, false);
-    }
-
-    urlBuilder(to) {
-        // helper log
-        console.log("URL BUILDER RUNNED");
-
-        // update current url
-        this.current = to;
-
-        // add to history
-        this.history.push(this.current);
-
-        // initial page loader
-        this.loader();
-    }
-
-    loader() {
-        // helper log
-        console.log("LOADER RUNNED");
-
-        // make request async function
-        async function request(url, self) {
-            try {
-                // create params
-                let params = undefined;
-
-                // check params
-                if (self.params !== undefined) {
-                    params = {
-                        method: "POST",
-                        body: self.params
-                    };
-                }
-
-                // request to url and get page
-                let response = await fetch(url, params);
-                let text = await response.text();
-
-                // check status
-                if (response.ok) {
-                    // initial page renderer
-                    self.renderer(text);
-                }
-                else {
-                    // report error
-                    console.log("Request failed");
-                }
-            }
-            catch {
-                // report error
-                console.log("Request failed");
-            }
-        }
-
-        // execute request async function
-        request(this.current, this);
-    }
-
-    renderer(page) {
-        // helper log
-        console.log("RENDERER RUNNED");
-
-        // rendering page
-        this.selector.innerHTML = page;
-
-        // initial page scanner
-        this.scanner();
-    }
-
-    scanner() {
-        // helper log
-        console.log("SCANNER RUNNED");
-
-        // scan links
-        let links = document.querySelectorAll("a");
-        links.forEach((link) => {
-            link.addEventListener("click", e => this.eventHandler(e, link));
+        this.app = document.querySelector(selector);
+        document.querySelectorAll("page").forEach(page => {
+            page.style.display = "none";
         });
-
-        // scan forms
-        let forms = document.querySelectorAll("form");
-        forms.forEach((form) => {
-            form.addEventListener("submit", e => this.eventHandler(e, form));
+        document.querySelectorAll("component").forEach(component => {
+            component.style.display = "none";
         });
+        this.router(this.home);
     }
-
-    eventHandler(event, target) {
-        // helper log
-        console.log("EVENT HANDLER RUNNED");
-        
-        // check target tag
-        if (event.target.nodeName == "A") {
-            // stop refresh
-            event.preventDefault();
-
-            // check href is exists
-            if (target.href !== undefined) {
-                // update params to undefined
-                this.params = undefined;
-                
-                // initial url builder
-                this.urlBuilder(target.href, false);
-            }
-            else {
-                // report error
-                console.log("href Attribute is require");
-            }
+     router(routeName, route) {
+        this.activeRoute = routeName;
+        if (this.routes[routeName].api === undefined) {
+            this.controllers(this.routes[routeName].controller);
         }
         else {
-            // stop refresh
-            event.preventDefault();
-
-            // check action is exists
-            if (target.action !== undefined) {
-                // update params to form data object
-                this.params = new FormData(target);
-
-                // initial url builder
-                this.urlBuilder(target.action, false)
-            }
-            else {
-                // report error
-                console.log("action Attribute is require");
+            this.sendRequest(route);
+        }
+    }
+    sendRequest(route) {
+        console.log("Request sending")
+        async function send(url, method, self) {
+            let response = await fetch(url, {
+                method: method
+            });
+            let json = await response.json();
+            if (response.ok) {
+                self.controllers(self.routes[self.activeRoute].controller, json);
             }
         }
+
+        let router = this.apiBuilder(this.routes[this.activeRoute].api, JSON.parse(route.getAttribute("vars")));
+        send(router, this.routes[this.activeRoute].method, this);
+    }
+    apiBuilder(url, variables) {
+        let variable;
+        for (variable in variables) {
+            url = url.replaceAll("::" + variable, variables[variable]);
+        }
+        return url;
+    }
+    controllers(ctrlr, params=null) {
+        if (params === null) {
+            this.data = ctrlr();
+        }
+        else {
+            this.data = ctrlr(params);
+        }
+        this.pageSwitcher();
+    }
+    pageSwitcher() {
+        let page = document.querySelector("page[name=" + this.data.page + "]");
+        if (this.data.title !== undefined) {
+            document.title = this.data.title;
+        }
+        else if (page.getAttribute("title") !== null) {
+            document.title = page.getAttribute("title");
+        }
+        this.app.innerHTML = page.innerHTML;
+        this.pageRender();
+    }
+    pageRender() {
+        let variables = this.data.compact;
+        if (variables !== undefined) {
+            let variable;
+            for (variable in variables) {
+                this.app.innerHTML = this.app.innerHTML.replaceAll("::" + variable, variables[variable]);
+            }
+        }
+        this.routeTagScanner();
+    }
+    routeTagScanner() {
+        this.app.querySelectorAll("route").forEach(oneRoute => {
+            oneRoute.addEventListener("click", e => this.router(oneRoute.getAttribute("to"), oneRoute));
+        });
+    }
+}
+
+class Component {
+    constructor() {
+        this.output = "";
+    }
+    add(componentName, variables) {
+        let componentInner = document.querySelector("component[name=" +componentName+ "]").innerHTML;
+        let variable;
+        for (variable in variables) {
+            componentInner = componentInner.replaceAll("::" + variable, variables[variable]);
+        }
+        this.output += componentInner;
+    }
+    get() {
+        return this.output;
     }
 }
