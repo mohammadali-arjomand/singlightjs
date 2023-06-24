@@ -1,5 +1,5 @@
 # Singlight
-Singlight is a light-weight, open-source, free, powerfull and easy-to-use Javascript library for creating SPAs
+Singlight is a light-weight, open-source, free, powerful and easy-to-use Javascript library for creating SPAs
 
 # Why use it?
 It's a super-light-weight library. `< 1KB` for minified file. It's very fast and high-performance
