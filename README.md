@@ -7,21 +7,7 @@ Singlight is a light-weight, open-source, free, powerful and easy-to-use Javascr
 [Click here](Unknown) for see examples. It's recommended for using.
 
 # Installation
-Install SinglightJs with which one you want:
-## NPM
-```bash
-npm i @mohammadali-arjomand/singlightjs
-```
-
-## Git
-```bash
-git clone https://github.com/mohammadali-arjomand/singlightjs.git
-```
-
-## CDN
-```html
-Unknown
-```
+[Click here](https://github.com/mohammadali-arjomand/singlightjs/wiki/Installation) and choose a installation method and perform
 
 ## Local File
 [Download it](https://github.com/mohammadali-arjomand/singlightjs/blob/master/scripts/singlight.min.js)
