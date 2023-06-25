@@ -12,7 +12,7 @@ Singlight is a light-weight, open-source, free, powerful and easy-to-use Javascr
 ## Local File
 [Download it](https://github.com/mohammadali-arjomand/singlightjs/blob/master/scripts/singlight.min.js)
 # Documentation
-[Click here](Unknown) for see Documentation.
+[Click here](https://github.com/mohammadali-arjomand/singlightjs/wiki) for see Documentation.
 
 # License
 MIT License - Copyright (c) 2023, MohammadAli Arjomand
