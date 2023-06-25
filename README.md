@@ -24,7 +24,7 @@ Unknown
 ```
 
 ## Local File
-[Download it](Unknown)
+[Download it]([Unknown](https://github.com/mohammadali-arjomand/singlightjs/blob/master/scripts/singlight.min.js)https://github.com/mohammadali-arjomand/singlightjs/blob/master/scripts/singlight.min.js)
 
 # Documentation
 [Click here](Unknown) for see Documentation.
