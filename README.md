@@ -17,7 +17,7 @@ class MyApp extends Singlight {
 const myApp = new MyApp();
 myApp.mount("#app");
 ```
-[Click here](Unknown) for see all SinglightJs examples.
+[Click here](https://github.com/mohammadali-arjomand/singlightjs-examples) for see all SinglightJs examples.
 
 # Installation
 [Click here](https://github.com/mohammadali-arjomand/singlightjs/wiki/Installation) and choose a installation method and perform
