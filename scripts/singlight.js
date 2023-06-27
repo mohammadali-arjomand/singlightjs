@@ -1,5 +1,3 @@
-const URL_BASE = window.location.toString();
-
 class Singlight {
     mount(mountOn) {
         this.lifecycle(this.beforeMounted);
@@ -9,7 +7,7 @@ class Singlight {
     }
     router(to, variables=null) {
         this.lifecycle(this.beforeRouted);
-        let output, url = URL_BASE + this.routes[to].url;
+        let output, url = window.location.toString() + this.routes[to].url;
         if (variables !== null) {
             for (let variable in variables) {
                 url = url.replaceAll(`:${variable}:`, variables[variable]);
