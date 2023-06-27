@@ -1,23 +1,23 @@
 # Singlight
-> Singlight2 published :))))))))
-
-> Singlight3, soon ...
+> Singlight3 published :))))))))
 
 # Introduction
-Singlight is a light-weight, open-source, free, powerful and easy-to-use Javascript library for creating SPAs. It's a super-light-weight library. `~2KB` for minified file. That's fast and high-performance.
+Singlight is a light-weight, open-source, free, powerful and easy-to-use Javascript library for creating SPAs. It's a super-light-weight library. `~1KB` for minified file. That's fast and high-performance.
 # Example
 ```js
 class MyApp extends Singlight {
   home = "homeRoute";
   routes = {
-    homeRoute: { controller: this.homeController }
+    homeRoute: {
+        url: "",
+        controller: this.homeController
+    }
   };
   homeController() {
-    return { page: "homePage" };
+    return "Welcome to Home";
   }
 }
-const myApp = new MyApp();
-myApp.mount("#app");
+new MyApp().mount("#app");
 ```
 [Click here](https://github.com/mohammadali-arjomand/singlightjs-examples) for see all SinglightJs examples.
 
