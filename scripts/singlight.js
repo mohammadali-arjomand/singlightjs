@@ -2,12 +2,14 @@ class Singlight {
     mount(mountOn) {
         this.lifecycle(this.beforeMounted);
         this.app = document.querySelector(mountOn);
+        this.url = window.location.toString();
         this.lifecycle(this.afterMounted);
         this.router(this.home);
     }
     router(to, variables=null) {
         this.lifecycle(this.beforeRouted);
-        let output, url = window.location.toString() + this.routes[to].url;
+        let output, url = this.url + this.routes[to].url;
+        console.log(url)
         if (variables !== null) {
             for (let variable in variables) {
                 url = url.replaceAll(`:${variable}:`, variables[variable]);
