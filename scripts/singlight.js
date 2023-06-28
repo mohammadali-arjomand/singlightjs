@@ -9,7 +9,6 @@ class Singlight {
     router(to, variables=null) {
         this.lifecycle(this.beforeRouted);
         let output, url = this.url + this.routes[to].url;
-        console.log(url)
         if (variables !== null) {
             for (let variable in variables) {
                 url = url.replaceAll(`:${variable}:`, variables[variable]);
