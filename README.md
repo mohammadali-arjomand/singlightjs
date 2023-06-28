@@ -5,7 +5,7 @@
 Singlight is a light-weight, open-source, free, powerful and easy-to-use Javascript library for creating SPAs. It's a super-light-weight library. `~1KB` for minified file. That's fast and high-performance.
 # Example
 ```js
-import { Singlight } from "./scripts/singlight.min.js";
+import { Singlight } from "https://unpkg.com/@mohammadali-arjomand/singlightjs@3.0.0/scripts/singlight.min.js";
 
 class MyApp extends Singlight {
   home = "homeRoute";
