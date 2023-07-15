@@ -1,67 +1,104 @@
-class Singlight {
-    mount(mountOn) {
-        this.lifecycle(this.beforeMounted);
-        this.app = document.querySelector(mountOn);
-        this.url = window.location.toString();
-        this.lifecycle(this.afterMounted);
-        this.router(this.home);
+var activePage = null;
+var activeRoute = null;
+var element = null;
+var routeInfo = {
+    variables:{}
+};
+
+class Page {
+    render() {
+        return this.template();
     }
-    router(to, variables=null) {
-        this.lifecycle(this.beforeRouted);
-        let output, url = this.url + this.routes[to].url;
-        if (variables !== null) {
-            for (let variable in variables) {
-                url = url.replaceAll(`:${variable}:`, variables[variable]);
+}
+
+class Reactive {
+    constructor(value) {
+        this.value = value;
+    }
+    get value() {
+        return this._value;
+    }
+    set value(value) {
+        this._value = value;
+        if (activePage !== null) {
+            element.innerHTML = activePage.render();
+        }
+    }
+}
+
+class Router {
+    constructor() {
+        // this.root = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
+        this.root = "/";
+        this.notfound = null;
+        this.forbidden = null;
+        this.routes = [];
+    }
+    setRoot(pathname) {
+        if (pathname.substring(0, 1) !== "/") {
+            pathname = "/" + pathname;
+        }
+        this.root = pathname;
+    }
+    addRoute(uri, page) {
+        if (uri.substring(uri.length-1, uri.length) !== "/") {
+            uri += "/";
+        }
+        let parsedUri = uri.replace(/(\{.*?\}\/)/g, "(.+?\\/)");
+        this.routes.push({uri,page,regex:RegExp(`^${parsedUri}`, "g"),parsedUri});
+    }
+    addRouteError(error, page) {
+        if (error == 404) {
+            this.notfound = page;
+        }
+        else if (error == 403) {
+            this.forbidden = page;
+        }
+    }
+    isMatch(check) {
+        for(let route of this.routes) {
+            if (check.substring(check.length-1, check.length) !== "/") {
+                check += "/";
             }
-            output = this.routes[to].controller(variables);
+            if (check.replace(route.regex, "") === "") {
+                activeRoute = route;
+                let values = check.substring(1, check.length).match(RegExp("(.+?\\/)", "g"));
+                let keys = route.uri.substring(1, route.uri.length).match(RegExp("(.+?\\/)", "g"));
+                for (let key in keys) {
+                    routeInfo.variables[keys[key].substring(1, keys[key].length-2)] = values[key].substring(0, values[key].length-1);
+                }
+                return route.page;
+            }
+        }
+        return null;
+    }
+}
+
+class Singlight {
+    router(router) {
+        this.router = router;
+    }
+    mount(on) {
+        this.element = on;
+        element = document.querySelector(this.element);
+    }
+    start() {
+        let route = window.location.pathname.substring(this.router.root.length, window.location.pathname.length);
+        let page = this.router.isMatch(route);
+        if(page !== null) {
+            activePage = new page();
+            element.innerHTML = activePage.render();
         }
         else {
-            output = this.routes[to].controller();
-        }
-        this.app.innerHTML = output;
-        window.history.pushState({}, "", url);
-        this.lifecycle(this.afterRouted);
-        this.render();
-    }
-    render() {
-        this.lifecycle(this.beforeRendered);
-        this.app.querySelectorAll("a").forEach(el => el.addEventListener("click", e => {
-            e.preventDefault();
-            let data, json = {}, variables = el.getAttribute("variables");
-            if (variables !== null) {
-                for (let variable of variables.split("|")) {
-                    data = variable.split("=");
-                    json[data[0]] = data[1];
-                }
-                this.router(el.getAttribute("route"), json);
+            if (this.router.notfound !== null) {
+                activePage = new this.router.notfound();
+                element.innerHTML = activePage.render();    
             }
             else {
-                this.router(el.getAttribute("route"));
+                element.innerHTML = "<h1>404 Not Found</h1>";
             }
-        }));
-        this.app.querySelectorAll("form").forEach(el => el.addEventListener("submit", e => e.preventDefault()));
-        this.app.querySelectorAll("[event]").forEach(el => {
-            let eventObj = this.events[el.getAttribute("event")];
-            el.addEventListener(eventObj.event, e => {
-                let handlerOutput = eventObj.handler(e);
-                if (handlerOutput !== undefined) {
-                    this.router(handlerOutput.route, handlerOutput.variables !== undefined ? handlerOutput.variables : null);
-                }
-            });
-        });
-        this.lifecycle(this.afterRendered);
-    }
-    lifecycle(func) {
-        if (func !== undefined) {
-            func();
         }
     }
 }
-function  template(templateId, variables) {
-    let templateInner = document.getElementById(templateId).innerHTML;
-    for (let variable in variables) {
-        templateInner = templateInner.replaceAll(`:${variable}:`, variables[variable]);
-    }
-    return templateInner;
-}
-export {Singlight, template};
+
+export { Page, Reactive, Router, Singlight, routeInfo };
