@@ -7,7 +7,21 @@ var routeInfo = {
 
 class Page {
     render() {
-        return this.template();
+        let template = this.template();
+        template = template.replace(/(\{\{.*?\}\})/g, (m,find) => {
+            find = find.substring(2, find.length-2);
+            let
+                variable,
+                i,
+                parts = find.split("."),
+                value = typeof this[parts[0].trim()] === "object" ? this[parts[0].trim()].value : this[parts[0].trim()];
+            delete parts[0];
+            for (i = 1; i < parts.length; i++) {
+                value = value[parts[i].trim()];
+            }
+            return value;
+        });
+        return template;
     }
 }
 
@@ -28,7 +42,6 @@ class Reactive {
 
 class Router {
     constructor() {
-        // this.root = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
         this.root = "/";
         this.notfound = null;
         this.forbidden = null;
