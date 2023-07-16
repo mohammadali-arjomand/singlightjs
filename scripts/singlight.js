@@ -1,5 +1,4 @@
 var activePage = null;
-var activeRoute = null;
 var element = null;
 var routeInfo = {
     variables:{}
@@ -11,7 +10,6 @@ class Page {
         template = template.replace(/(\{\{.*?\}\})/g, (m,find) => {
             find = find.substring(2, find.length-2);
             let
-                variable,
                 i,
                 parts = find.split("."),
                 value = typeof this[parts[0].trim()] === "object" ? this[parts[0].trim()].value : this[parts[0].trim()];
@@ -91,7 +89,6 @@ class Router {
                 check += "/";
             }
             if (check.replace(route.regex, "") === "") {
-                activeRoute = route;
                 let values = check.substring(1, check.length).match(RegExp("(.+?\\/)", "g"));
                 let keys = route.uri.substring(1, route.uri.length).match(RegExp("(.+?\\/)", "g"));
                 for (let key in keys) {
