@@ -131,4 +131,5 @@ class Singlight {
     }
 }
 
-export { Page, Reactive, Router, Singlight, routeInfo };
+const template = (id) => { return document.getElementById(id).innerHTML };
+export { Page, Reactive, Router, Singlight, routeInfo, template };
