@@ -58,7 +58,7 @@ class Router {
             uri += "/";
         }
         let parsedUri = uri.replace(/(\{.*?\}\/)/g, "(.+?\\/)");
-        this.routes.push({uri,page,regex:RegExp(`^${parsedUri}`, "g"),parsedUri});
+        this.routes.push({uri,page,regex:RegExp(`^${parsedUri}`, "g")});
     }
     addRouteError(error, page) {
         if (error == 404) {
@@ -66,6 +66,23 @@ class Router {
         }
         else if (error == 403) {
             this.forbidden = page;
+        }
+    }
+    addRouteGroup(prefix, routes) {
+        prefix = prefix.substring(0,1) !== "/" ? "/" + prefix : prefix;
+        let created = routes(new Router());
+        let createdRoutes = created !== undefined ? created.routes : [];
+        for (let i in createdRoutes) {
+            let oldRegex = createdRoutes[i].regex.toString();
+            if (createdRoutes[i].uri.substring(0,1) !== "/") {
+                createdRoutes[i].uri = `${prefix}/${createdRoutes[i].uri}`;
+                createdRoutes[i].regex = RegExp(`${prefix}\\/${oldRegex.substring(2,oldRegex.length-2)}`, "g");
+            }
+            else {
+                createdRoutes[i].uri = `${prefix}${createdRoutes[i].uri}`;
+                createdRoutes[i].regex = RegExp(`${prefix}${oldRegex.substring(2,oldRegex.length-2)}`, "g");
+            }
+            this.routes.push(createdRoutes[i]);
         }
     }
     isMatch(check) {
