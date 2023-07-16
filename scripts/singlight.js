@@ -5,6 +5,11 @@ var routeInfo = {
 };
 
 class Page {
+    singlight = null;
+    redirect(to) {
+        window.history.pushState({}, "", to);
+        this.singlight.start();
+    }
     render() {
         let template = this.template();
         template = template.replace(/(\{\{.*?\}\})/g, (m,find) => {
@@ -114,6 +119,7 @@ class Singlight {
         let page = this.router.isMatch(route);
         if(page !== null) {
             activePage = new page();
+            activePage.singlight = this;
             element.innerHTML = activePage.render();
         }
         else {
