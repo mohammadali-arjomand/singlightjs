@@ -96,7 +96,7 @@ class Router {
                 let values = check.substring(1, check.length).match(RegExp("(.+?\\/)", "g"));
                 let keys = route.uri.substring(1, route.uri.length).match(RegExp("(.+?\\/)", "g"));
                 for (let key in keys) {
-                    variables[keys[key].substring(1, keys[key].length-2)] = values[key].substring(0, values[key].length-1);
+                    variables[keys[key].substring(1, keys[key].length-2).trim()] = values[key].substring(0, values[key].length-1);
                 }
                 return {route,variables};
             }
