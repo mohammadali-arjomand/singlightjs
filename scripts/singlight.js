@@ -55,19 +55,13 @@ class Router {
         this.root = pathname;
     }
     addRoute(uri, page) {
-        if (uri.substring(uri.length-1, uri.length) !== "/") {
-            uri += "/";
-        }
+        uri = uri.substring(uri.length-1, uri.length) !== "/" ? uri + "/" : uri;
         let parsedUri = uri.replace(/(\{.*?\}\/)/g, "(.+?\\/)");
         this.routes.push({uri,page,regex:RegExp(`^${parsedUri}`, "g")});
     }
     addRouteError(error, page) {
-        if (error == 404) {
-            this.notfound = page;
-        }
-        else if (error == 403) {
-            this.forbidden = page;
-        }
+        this.notfound = error == 404 ? page : null;
+        this.forbidden = error == 403 ? page : null;
     }
     addRouteGroup(prefix, routes) {
         prefix = prefix.substring(0,1) !== "/" ? "/" + prefix : prefix;
@@ -88,9 +82,7 @@ class Router {
     }
     isMatch(check) {
         for(let route of this.routes) {
-            if (check.substring(check.length-1, check.length) !== "/") {
-                check += "/";
-            }
+            check = check.substring(check.length-1, check.length) !== "/" ? check + "/" : check;
             if (check.replace(route.regex, "") === "") {
                 let variables = {};
                 let values = check.substring(1, check.length).match(RegExp("(.+?\\/)", "g"));
