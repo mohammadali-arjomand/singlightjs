@@ -4,9 +4,21 @@ var element = null;
 class Page {
     singlight = null;
     route = {};
+    names = [];
     redirect(to) {
         window.history.pushState({}, "", to);
         this.singlight.start();
+    }
+    routeName(name, variables) {
+        for (let founded of this.names) {
+            if (founded.name == name) {
+                let url = founded.uri.replace(/(\{.*?\}\/)/g, (m,find) => {
+                    return variables[find.substring(1,find.length-2)] + "/";
+                });
+                return url; 
+            }
+        }
+        return null;
     }
     render() {
         let template = this.template();
@@ -47,7 +59,7 @@ class Router {
         this.notfound = null;
         this.forbidden = null;
         this.routes = [];
-        this.names = {};
+        this.names = [];
     }
     setRoot(pathname) {
         if (pathname.substring(0, 1) !== "/") {
@@ -59,10 +71,7 @@ class Router {
         uri = uri.substring(uri.length-1, uri.length) !== "/" ? uri + "/" : uri;
         let parsedUri = uri.replace(/(\{.*?\}\/)/g, "(.+?\\/)");
         this.routes.push({uri,page,regex:RegExp(`^${parsedUri}`, "g")});
-        if (name !== null) {
-            this.names[name] = uri;
-        }
-        console.log(name);
+        if (name !== null) this.names.push({name,uri});
     }
     addRouteError(error, page) {
         this.notfound = error == 404 ? page : null;
@@ -72,6 +81,7 @@ class Router {
         prefix = prefix.substring(0,1) !== "/" ? "/" + prefix : prefix;
         let created = routes(new Router());
         let createdRoutes = created !== undefined ? created.routes : [];
+        let createdNames = created !== undefined ? created.names : [];
         for (let i in createdRoutes) {
             let oldRegex = createdRoutes[i].regex.toString();
             if (createdRoutes[i].uri.substring(0,1) !== "/") {
@@ -82,7 +92,16 @@ class Router {
                 createdRoutes[i].uri = `${prefix}${createdRoutes[i].uri}`;
                 createdRoutes[i].regex = RegExp(`${prefix}${oldRegex.substring(2,oldRegex.length-2)}`, "g");
             }
+            if (createdNames[i] !== undefined) {
+                if (createdNames[i].uri.substring(0,1) !== "/") {
+                    createdNames[i].uri = `${prefix}/${createdNames[i].uri}`;
+                }
+                else {
+                    createdNames[i].uri = `${prefix}${createdNames[i].uri}`;
+                }
+            }
             this.routes.push(createdRoutes[i]);
+            if (createdNames[i] !== undefined) this.names.push(createdNames[i]);
         }
     }
     isMatch(check) {
@@ -95,7 +114,7 @@ class Router {
                 for (let key in keys) {
                     variables[keys[key].substring(1, keys[key].length-2).trim()] = values[key].substring(0, values[key].length-1);
                 }
-                return {route,variables};
+                return {route,variables,names:this.names};
             }
         }
         return null;
@@ -116,6 +135,8 @@ class Singlight {
         if(result !== null) {
             activePage = new result.route.page();
             activePage.route = result.variables;
+            activePage.names = this.router.names;
+            // console.log(this.router.names);
             activePage.singlight = this;
             element.innerHTML = activePage.render();
         }
