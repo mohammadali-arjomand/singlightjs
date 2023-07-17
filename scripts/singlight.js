@@ -47,6 +47,7 @@ class Router {
         this.notfound = null;
         this.forbidden = null;
         this.routes = [];
+        this.names = {};
     }
     setRoot(pathname) {
         if (pathname.substring(0, 1) !== "/") {
@@ -54,10 +55,14 @@ class Router {
         }
         this.root = pathname;
     }
-    addRoute(uri, page) {
+    addRoute(uri, page, name=null) {
         uri = uri.substring(uri.length-1, uri.length) !== "/" ? uri + "/" : uri;
         let parsedUri = uri.replace(/(\{.*?\}\/)/g, "(.+?\\/)");
         this.routes.push({uri,page,regex:RegExp(`^${parsedUri}`, "g")});
+        if (name !== null) {
+            this.names[name] = uri;
+        }
+        console.log(name);
     }
     addRouteError(error, page) {
         this.notfound = error == 404 ? page : null;
@@ -111,7 +116,6 @@ class Singlight {
         if(result !== null) {
             activePage = new result.route.page();
             activePage.route = result.variables;
-            console.log(activePage.route);
             activePage.singlight = this;
             element.innerHTML = activePage.render();
         }
