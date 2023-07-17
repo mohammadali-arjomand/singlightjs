@@ -9,7 +9,7 @@ class Page {
         window.history.pushState({}, "", to);
         this.singlight.start();
     }
-    routeName(name, variables) {
+    url(name, variables) {
         for (let founded of this.names) {
             if (founded.name == name) {
                 let url = founded.uri.replace(/(\{.*?\}\/)/g, (m,find) => {
