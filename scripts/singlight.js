@@ -1,11 +1,9 @@
 var activePage = null;
 var element = null;
-var routeInfo = {
-    variables:{}
-};
 
 class Page {
     singlight = null;
+    route = {};
     redirect(to) {
         window.history.pushState({}, "", to);
         this.singlight.start();
@@ -17,12 +15,12 @@ class Page {
             let
                 i,
                 parts = find.split("."),
-                value = typeof this[parts[0].trim()] === "object" ? this[parts[0].trim()].value : this[parts[0].trim()];
+                value = this[parts[0].trim()];
             delete parts[0];
             for (i = 1; i < parts.length; i++) {
                 value = value[parts[i].trim()];
             }
-            return value;
+            return typeof value === "object" ? value.value : value;
         });
         return template;
     }
@@ -94,12 +92,13 @@ class Router {
                 check += "/";
             }
             if (check.replace(route.regex, "") === "") {
+                let variables = {};
                 let values = check.substring(1, check.length).match(RegExp("(.+?\\/)", "g"));
                 let keys = route.uri.substring(1, route.uri.length).match(RegExp("(.+?\\/)", "g"));
                 for (let key in keys) {
-                    routeInfo.variables[keys[key].substring(1, keys[key].length-2)] = values[key].substring(0, values[key].length-1);
+                    variables[keys[key].substring(1, keys[key].length-2)] = values[key].substring(0, values[key].length-1);
                 }
-                return route.page;
+                return {route,variables};
             }
         }
         return null;
@@ -116,9 +115,11 @@ class Singlight {
     }
     start() {
         let route = window.location.pathname.substring(this.router.root.length, window.location.pathname.length);
-        let page = this.router.isMatch(route);
-        if(page !== null) {
-            activePage = new page();
+        let result = this.router.isMatch(route);
+        if(result !== null) {
+            activePage = new result.route.page();
+            activePage.route = result.variables;
+            console.log(activePage.route);
             activePage.singlight = this;
             element.innerHTML = activePage.render();
         }
@@ -135,4 +136,4 @@ class Singlight {
 }
 
 const template = (id) => { return document.getElementById(id).innerHTML };
-export { Page, Reactive, Router, Singlight, routeInfo, template };
+export { Page, Reactive, Router, Singlight, template };
