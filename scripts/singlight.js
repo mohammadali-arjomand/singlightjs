@@ -62,6 +62,12 @@ class Page {
                 e.style.display = "none";
             }
         });
+
+        let event;
+        template.querySelectorAll("[\\@event]").forEach(e => {
+            event = e.getAttribute("@event").split(":");
+            e.addEventListener(event[0], e => {this[event[1]](e)});
+        });
     }
 }
 
