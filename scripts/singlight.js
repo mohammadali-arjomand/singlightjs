@@ -4,6 +4,7 @@ var element = null;
 class Page {
     singlight = null;
     route = {};
+    root = "/";
     names = [];
     redirect(to) {
         window.history.pushState({}, "", to);
@@ -13,9 +14,9 @@ class Page {
         for (let founded of this.names) {
             if (founded.name == name) {
                 let url = founded.uri.replace(/(\{.*?\}\/)/g, (m,find) => {
-                    return variables[find.substring(1,find.length-2)] + "/";
+                    return variables[find.substring(1,find.length-2).trim()] + "/";
                 });
-                return url; 
+                return this.root +"/"+ url.substring(1,url.length); 
             }
         }
         return null;
@@ -62,9 +63,8 @@ class Router {
         this.names = [];
     }
     setRoot(pathname) {
-        if (pathname.substring(0, 1) !== "/") {
-            pathname = "/" + pathname;
-        }
+        pathname = pathname.substring(0,1) !== "/" ? "/" + pathname : pathname;
+        pathname = pathname.substring(pathname.length-1,pathname.length) === "/" ? pathname.substring(0,pathname.length-1) : pathname;
         this.root = pathname;
     }
     addRoute(uri, page, name=null) {
@@ -136,8 +136,9 @@ class Singlight {
             activePage = new result.route.page();
             activePage.route = result.variables;
             activePage.names = this.router.names;
-            // console.log(this.router.names);
+            activePage.root = this.router.root;
             activePage.singlight = this;
+            activePage.setup();
             element.innerHTML = activePage.render();
         }
         else {
