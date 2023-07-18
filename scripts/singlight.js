@@ -21,6 +21,9 @@ class Page {
         }
         return null;
     }
+    template(id) {
+        return document.getElementById(id).innerHTML
+    };
     render(template) {
         template.innerHTML = template.innerHTML.replace(/(\{\{.*?\}\})/g, (m,find) => {
             find = find.substring(2, find.length-2);
@@ -166,5 +169,4 @@ class Singlight {
     }
 }
 
-const template = (id) => { return document.getElementById(id).innerHTML };
-export { Page, Reactive, Router, Singlight, template };
+export { Page, Reactive, Router, Singlight };
