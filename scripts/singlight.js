@@ -68,13 +68,10 @@ class Page {
         });
 
         template.querySelectorAll("[\\@display]").forEach(e => {            
-            if (eval(e.getAttribute("@display"))) {
-                e.removeAttribute("@display");
-            }
-            else {
-                e.removeAttribute("@display");
+            if (!eval(e.getAttribute("@display"))) {
                 e.style.display = "none";
             }
+            e.removeAttribute("@display");
         });
 
         let event;
