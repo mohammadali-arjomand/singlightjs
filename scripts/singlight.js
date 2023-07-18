@@ -31,6 +31,9 @@ class Page {
     template(id) {
         return document.getElementById(id).innerHTML
     }
+    title(title) {
+        document.title = title;
+    }
     render(template) {
         let variables, el;
         template.querySelectorAll("[\\@for]").forEach(e => {
