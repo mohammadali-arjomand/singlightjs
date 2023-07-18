@@ -35,11 +35,11 @@ class Page {
         let variables, el;
         template.querySelectorAll("[\\@for]").forEach(e => {
             variables = e.getAttribute("@for").split(" of ");
-            for (let i of this[variables[1]]) {
+            for (let i of this[variables[1].trim()]) {
                 el = document.createElement(e.nodeName);
                 el.innerHTML = e.innerHTML;
                 el = e.parentNode.insertBefore(el, e);
-                this[variables[0]] = i;
+                this[variables[0].trim()] = i;
                 this.render(el);
             }
             e.parentNode.removeChild(e);
@@ -80,7 +80,7 @@ class Page {
         let event;
         template.querySelectorAll("[\\@event]").forEach(e => {
             event = e.getAttribute("@event").split(":");
-            e.addEventListener(event[0], e => {this[event[1]](e)});
+            e.addEventListener(event[0].trim(), e => {this[event[1].trim()](e)});
         });
     }
 }
