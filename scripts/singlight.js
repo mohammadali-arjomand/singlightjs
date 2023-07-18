@@ -82,6 +82,25 @@ class Page {
             event = e.getAttribute("@event").split(":");
             e.addEventListener(event[0].trim(), e => {this[event[1].trim()](e)});
         });
+
+        let route, name, params, passedParams = {};
+        template.querySelectorAll("[\\@route]").forEach(e => {
+            route = e.getAttribute("@route");
+            if (route.trim().substring(0,1) === "_") {
+                name = route.split(":")[0];
+                name = name.substring(1,name.length);
+                params = route.split(":")[1];
+                params = params.split(",");
+                for (let i in params) {
+                    passedParams[params[i].split("=")[0]] = params[i].split("=")[1];
+                }
+                e.addEventListener("click", () => { this.redirect(this.url(name, passedParams)) });
+            }
+            else {
+                e.addEventListener("click", () => { this.redirect(route) });
+            }
+            e.removeAttribute("@route");
+        });
     }
 }
 
