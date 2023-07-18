@@ -32,6 +32,19 @@ class Page {
         return document.getElementById(id).innerHTML
     }
     render(template) {
+        let variables, el;
+        template.querySelectorAll("[\\@for]").forEach(e => {
+            variables = e.getAttribute("@for").split(" of ");
+            for (let i of this[variables[1]]) {
+                el = document.createElement(e.nodeName);
+                el.innerHTML = e.innerHTML;
+                el = e.parentNode.insertBefore(el, e);
+                this[variables[0]] = i;
+                this.render(el);
+            }
+            e.parentNode.removeChild(e);
+        });
+
         template.innerHTML = template.innerHTML.replace(/(\{\{.*?\}\})/g, (m,find) => {
             find = find.substring(2, find.length-2);
             let
@@ -50,7 +63,7 @@ class Page {
                 e.removeAttribute("@if");
             }
             else {
-                template.removeChild(e);
+                e.parentNode.removeChild(e);
             }
         });
 
