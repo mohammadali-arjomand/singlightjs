@@ -1,5 +1,4 @@
-var activePage = null;
-var element = null;
+var activePage = null, element = null;
 
 class Page {
     singlight = null;
