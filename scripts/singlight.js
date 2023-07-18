@@ -81,6 +81,7 @@ class Page {
         template.querySelectorAll("[\\@event]").forEach(e => {
             event = e.getAttribute("@event").split(":");
             e.addEventListener(event[0].trim(), e => {this[event[1].trim()](e)});
+            e.removeAttribute("@event");
         });
 
         let route, name, params, passedParams = {};
