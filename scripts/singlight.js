@@ -21,9 +21,8 @@ class Page {
         }
         return null;
     }
-    render() {
-        let template = this.template();
-        template = template.replace(/(\{\{.*?\}\})/g, (m,find) => {
+    render(template) {
+        template.innerHTML = template.innerHTML.replace(/(\{\{.*?\}\})/g, (m,find) => {
             find = find.substring(2, find.length-2);
             let
                 i,
@@ -35,7 +34,6 @@ class Page {
             }
             return typeof value === "object" ? value.value : value;
         });
-        return template;
     }
 }
 
@@ -49,7 +47,8 @@ class Reactive {
     set value(value) {
         this._value = value;
         if (activePage !== null) {
-            element.innerHTML = activePage.render();
+            element.innerHTML = activePage.template();
+            activePage.render(element);
         }
     }
 }
@@ -74,8 +73,8 @@ class Router {
         if (name !== null) this.names.push({name,uri});
     }
     addRouteError(error, page) {
-        this.notfound = error == 404 ? page : null;
-        this.forbidden = error == 403 ? page : null;
+        this.notfound = error == 404 ? page : this.notfound;
+        this.forbidden = error == 403 ? page : this.forbidden;
     }
     addRouteGroup(prefix, routes) {
         prefix = prefix.substring(0,1) !== "/" ? "/" + prefix : prefix;
@@ -136,7 +135,8 @@ class Singlight {
             if (result.route.accessor !== null && result.route.accessor() === false) {
                 if (this.router.forbidden !== null) {
                     activePage = new this.router.forbidden();
-                    element.innerHTML = activePage.render();    
+                    element.innerHTML = activePage.template();
+                    activePage.render(element);
                 }
                 else {
                     element.innerHTML = "<h1>403 Forbidden</h1>";
@@ -149,13 +149,15 @@ class Singlight {
                 activePage.root = this.router.root;
                 activePage.singlight = this;
                 activePage.setup();
-                element.innerHTML = activePage.render();
+                element.innerHTML = activePage.template();
+                activePage.render(element);
             }
         }
         else {
             if (this.router.notfound !== null) {
                 activePage = new this.router.notfound();
-                element.innerHTML = activePage.render();    
+                element.innerHTML = activePage.template();
+                activePage.render(element);
             }
             else {
                 element.innerHTML = "<h1>404 Not Found</h1>";
