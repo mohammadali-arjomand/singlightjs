@@ -67,10 +67,10 @@ class Router {
         pathname = pathname.substring(pathname.length-1,pathname.length) === "/" ? pathname.substring(0,pathname.length-1) : pathname;
         this.root = pathname;
     }
-    addRoute(uri, page, name=null) {
+    addRoute(uri, page, name=null, accessor=null) {
         uri = uri.substring(uri.length-1, uri.length) !== "/" ? uri + "/" : uri;
         let parsedUri = uri.replace(/(\{.*?\}\/)/g, "(.+?\\/)");
-        this.routes.push({uri,page,regex:RegExp(`^${parsedUri}`, "g")});
+        this.routes.push({uri,page,regex:RegExp(`^${parsedUri}`, "g"),accessor});
         if (name !== null) this.names.push({name,uri});
     }
     addRouteError(error, page) {
@@ -133,13 +133,24 @@ class Singlight {
         let route = window.location.pathname.substring(this.router.root.length, window.location.pathname.length);
         let result = this.router.isMatch(route);
         if(result !== null) {
-            activePage = new result.route.page();
-            activePage.route = result.variables;
-            activePage.names = this.router.names;
-            activePage.root = this.router.root;
-            activePage.singlight = this;
-            activePage.setup();
-            element.innerHTML = activePage.render();
+            if (result.route.accessor !== null && result.route.accessor() === false) {
+                if (this.router.forbidden !== null) {
+                    activePage = new this.router.forbidden();
+                    element.innerHTML = activePage.render();    
+                }
+                else {
+                    element.innerHTML = "<h1>403 Forbidden</h1>";
+                }
+            }
+            else {
+                activePage = new result.route.page();
+                activePage.route = result.variables;
+                activePage.names = this.router.names;
+                activePage.root = this.router.root;
+                activePage.singlight = this;
+                activePage.setup();
+                element.innerHTML = activePage.render();
+            }
         }
         else {
             if (this.router.notfound !== null) {
