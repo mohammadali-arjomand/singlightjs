@@ -52,6 +52,16 @@ class Page {
                 element.removeChild(e);
             }
         });
+
+        element.querySelectorAll("[\\@display]").forEach(e => {            
+            if (eval(e.getAttribute("@display"))) {
+                e.removeAttribute("@display");
+            }
+            else {
+                e.removeAttribute("@display");
+                e.style.display = "none";
+            }
+        });
     }
 }
 
