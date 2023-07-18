@@ -4,7 +4,7 @@ var element = null;
 class Page {
     singlight = null;
     route = {};
-    root = "/";
+    root = "";
     names = [];
     token = {
         set(token) { localStorage.setItem("singlightApiTokenManager", token) },
@@ -13,6 +13,8 @@ class Page {
         check() { return localStorage.getItem("singlightApiTokenManager") === null ? false : true }
     };
     redirect(to) {
+        to = to.substring(0,1) !== "/" ? "/" + to : to;
+        to = to.substring(0,this.root.length) !== this.root ? this.root + to : to;
         window.history.pushState({}, "", to);
         this.singlight.start();
     }
@@ -89,7 +91,7 @@ class Reactive {
 
 class Router {
     constructor() {
-        this.root = "/";
+        this.root = "";
         this.notfound = null;
         this.forbidden = null;
         this.routes = [];
