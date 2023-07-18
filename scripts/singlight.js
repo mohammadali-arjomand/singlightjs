@@ -6,6 +6,12 @@ class Page {
     route = {};
     root = "/";
     names = [];
+    token = {
+        set(token) { localStorage.setItem("singlightApiTokenManager", token) },
+        get() { return localStorage.getItem("singlightApiTokenManager") },
+        remove() { localStorage.removeItem("singlightApiTokenManager") },
+        check() { return localStorage.getItem("singlightApiTokenManager") === null ? false : true }
+    };
     redirect(to) {
         window.history.pushState({}, "", to);
         this.singlight.start();
@@ -23,7 +29,7 @@ class Page {
     }
     template(id) {
         return document.getElementById(id).innerHTML
-    };
+    }
     render(template) {
         template.innerHTML = template.innerHTML.replace(/(\{\{.*?\}\})/g, (m,find) => {
             find = find.substring(2, find.length-2);
