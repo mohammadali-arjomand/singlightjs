@@ -1,5 +1,5 @@
 # Singlight
-![SINGLIGHT-LOGO](https://s28.picofile.com/file/8466079984/singlight.png)
+![SINGLIGHT-LOGO](https://s28.picofile.com/file/8466080650/singlight.png)
 
 # Introduction
 Singlight is a light-weight, open-source, free, powerful and easy-to-use Javascript library for creating SPAs. It's a super-light-weight library. `<5KB` for minified file. That's fast and high-performance.
