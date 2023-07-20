@@ -13,6 +13,10 @@ class Page { // create parent class for pages
         window.history.pushState({}, "", to) // push new url to addressbar
         this.singlight.start() // restart loading page
     }
+    back() { // redirect back
+        window.history.back(); // reload old url
+        setTimeout(() => this.singlight.start(), 5) // wait for 0.005 second and restart loading page
+    }
     url(name, variables) { // make url by name
         for (let founded of this.names) { // loop for found name
             if (founded.name == name) { // check founded name is passed name
@@ -43,7 +47,6 @@ class Page { // create parent class for pages
             }
             e.parentNode.removeChild(e) // remove new element
         })
-
 
         template.querySelectorAll("[\\@template]").forEach(e => { // loop of every @template
             e.innerHTML = this.load(e.getAttribute("@template")) // load template
