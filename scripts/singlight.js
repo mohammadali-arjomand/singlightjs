@@ -86,10 +86,12 @@ class Page { // create parent class for pages
             if (route.trim().substring(0,1) === "_") { // check @route value is a url or route name and parameters
                 name = route.split(":")[0] // get name
                 name = name.substring(1,name.length) // remove _ from first of name
-                params = route.split(":")[1] // get parameters
-                params = params.split(",") // split parameters
-                for (let i in params) { // loop on the parameters
-                    passedParams[params[i].split("=")[0]] = params[i].split("=")[1] // add parameter name and value to passedParams variable
+                if (route.includes(":")) {
+                    params = route.split(":")[1] // get parameters
+                    params = params.split(",") // split parameters
+                    for (let i in params) { // loop on the parameters
+                        passedParams[params[i].split("=")[0]] = params[i].split("=")[1] // add parameter name and value to passedParams variable
+                    }
                 }
                 e.addEventListener("click", () => { this.redirect(this.url(name, passedParams)) }) // add event listener to element to redirect when clicked
             }
