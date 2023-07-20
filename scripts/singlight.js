@@ -34,6 +34,21 @@ class Page { // create parent class for pages
     title(title) { // title helper
         document.title = title // set new title
     }
+    elementor(elements) {
+        let el = document.createElement(elements.name)
+        if (elements.attributes !== undefined) {
+            for (let attribute in elements.attributes) {
+                el.setAttribute(attribute, elements.attributes[attribute]);
+            }
+        }
+        if (elements.text !== undefined) el.innerHTML = elements.text
+        if (elements.children !== undefined) {
+            for (let i in elements.children) {
+                el.appendChild(this.elementor(elements.children[i]))
+            }
+        }
+        return el
+    }
     render(template) { // template builder (renderer engine)
         let variables, el // initial for variables (parameters) and new element builded
         template.querySelectorAll("[\\@for]").forEach(e => { // start loop of every @for
