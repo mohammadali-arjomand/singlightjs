@@ -193,7 +193,7 @@ class Singlight { // singlight (main class)
         let result = this.router.isMatch(route) // find match router
         if(result !== null) { // check result defined
             if (result.route.accessor !== null && result.route.accessor() === false) { // check accessor is defined and it's false
-                if (this.router.forbidden !== null) { // check customized 403 is exists
+                if (this.router.forbidden !== undefined) { // check customized 403 is exists
                     activePage = new this.router.forbidden() // set active page to customized 403 page
                     element.innerHTML = activePage.template() // set template to element
                     activePage.render(element) // render page
@@ -214,7 +214,7 @@ class Singlight { // singlight (main class)
             }
         }
         else { // result is not defined
-            if (this.router.notfound !== null) { // check customized 404 is exists
+            if (this.router.notfound !== undefined) { // check customized 404 is exists
                 activePage = new this.router.notfound() // set active page to customized 404 page
                 element.innerHTML = activePage.template() // set template to element
                 activePage.render(element) // render page
