@@ -84,8 +84,13 @@ class Page { // create parent class for pages
         let event // initial event variable for @event
         template.querySelectorAll("[\\@event]").forEach(e => { // find every @event
             event = e.getAttribute("@event").split(":") // get event type and event handler
-            e.addEventListener(event[0].trim(), e => {this[event[1].trim()](e)}) // add event listener to @event element
+            e.addEventListener(event[0].trim(), e => this[event[1].trim()](e)) // add event listener to @event element
             e.removeAttribute("@event") // remove @event attribute
+        })
+
+        template.querySelectorAll("[\\@back]").forEach(e => {
+            e.addEventListener("click", () => this.back());
+            e.removeAttribute("@back");
         })
 
         let route, name, params, passedParams = {} // initial route for get @route, name for route-name, params for route parameters, passesParams for convert params to object
