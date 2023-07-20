@@ -44,6 +44,11 @@ class Page { // create parent class for pages
             e.parentNode.removeChild(e) // remove new element
         })
 
+
+        template.querySelectorAll("[\\@template]").forEach(e => { // loop of every @template
+            e.innerHTML = this.load(e.getAttribute("@template")) // load template
+        })
+
         template.innerHTML = template.innerHTML.replace(/(\{\{.*?\}\})/g, (m,find) => { // replace {{ ... }} by variable value
             find = find.substring(2, find.length-2) // remove '{{' and '}}' from finded
             let // create some variables
