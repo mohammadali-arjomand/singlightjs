@@ -24,7 +24,7 @@ class Page { // create parent class for pages
         }
         return null // return null if name not defined
     }
-    template(id) { // template helper
+    load(id) { // load template helper
         return document.getElementById(id).innerHTML // find template and return inner of template
     }
     title(title) { // title helper
