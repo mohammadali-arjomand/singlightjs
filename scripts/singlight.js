@@ -31,6 +31,9 @@ class Page { // create parent class for pages
     load(id) { // load template helper
         return document.getElementById(id).innerHTML // find template and return inner of template
     }
+    refresh() {
+        this.singlight.start()
+    }
     title(title) { // title helper
         document.title = title // set new title
     }
