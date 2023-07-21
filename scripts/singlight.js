@@ -148,6 +148,7 @@ class Reactive { // reactivity class
 }
 
 class Router { // create router
+    root = "";
     constructor() {
         this.routes = [] // initial routes 
         this.names = [] // initial names
