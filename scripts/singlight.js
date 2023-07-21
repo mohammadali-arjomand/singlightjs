@@ -31,8 +31,9 @@ class Page { // create parent class for pages
     load(id) { // load template helper
         return document.getElementById(id).innerHTML // find template and return inner of template
     }
-    refresh() {
-        this.singlight.start()
+    refresh() { // refresh page
+        element.innerHTML = activePage.template() // set page template to element
+        activePage.render(element) // render page
     }
     title(title) { // title helper
         document.title = title // set new title
