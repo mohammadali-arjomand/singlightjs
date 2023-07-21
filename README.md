@@ -6,7 +6,7 @@ Singlight is a light-weight, open-source, free, powerful and easy-to-use Javascr
 # Example
 ```js
 // import requires
-import { Singlight, Router, Page } from "https://unpkg.com/@mohammadali-arjomand/singlightjs@4.5.2/scripts/singlight.min.js";
+import { Singlight, Router, Page } from "https://unpkg.com/@mohammadali-arjomand/singlightjs@4.6.3/scripts/singlight.min.js";
 
 // create home page
 class HomePage extends Page {
