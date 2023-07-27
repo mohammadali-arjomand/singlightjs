@@ -54,15 +54,31 @@ class Page { // create parent class for pages
         return el
     }
     render(template) { // template builder (renderer engine)
-        let variables, el // initial for variables (parameters) and new element builded
+        function replaceVariables(template, variables) { // replace variables {{ ... }}
+            template.innerHTML = template.innerHTML.replace(/(\{\{.*?\}\})/g, (m,find) => { // replace {{ ... }} by variable value
+                find = find.substring(2, find.length-2) // remove '{{' and '}}' from finded
+                let // create some variables
+                    i, // i variable for loop
+                    parts = find.split("."), // split variable name for access to object
+                    value = variables[parts[0].trim()] // initial value of variable
+                delete parts[0] // delete first part for it set added to value
+                for (i = 1; i < parts.length; i++) { // loop for find latest value (if value of variable is object)
+                    value = value[parts[i].trim()] // set a value to value variable
+                }
+                return typeof value === "object" ? value.value : value // if it's a object (Reactive variable) return .value if not return self value
+            })
+        }
+
+        let variables, el, vars // initial for variables (parameters) and new element builded
         template.querySelectorAll("[\\@for]").forEach(e => { // start loop of every @for
             variables = e.getAttribute("@for").split(" of ") // extract for value
             for (let i of this[variables[1].trim()]) { // really 'for' for make elements
                 el = document.createElement(e.nodeName) // make new element with main element name
                 el.innerHTML = e.innerHTML // set new element inner by main element inner
                 el = e.parentNode.insertBefore(el, e) // insert new element before main element
-                this[variables[0].trim()] = i // inject variable value in page class
-                this.render(el) // render new element
+                vars = this // set this data to vars
+                vars[variables[0].trim()] = i // inject variable value in page class
+                replaceVariables(el, vars) // replace variables {{ ... }}
             }
             e.parentNode.removeChild(e) // remove new element
         })
@@ -71,18 +87,7 @@ class Page { // create parent class for pages
             e.innerHTML = this.load(e.getAttribute("@template")) // load template
         })
 
-        template.innerHTML = template.innerHTML.replace(/(\{\{.*?\}\})/g, (m,find) => { // replace {{ ... }} by variable value
-            find = find.substring(2, find.length-2) // remove '{{' and '}}' from finded
-            let // create some variables
-                i, // i variable for loop
-                parts = find.split("."), // split variable name for access to object
-                value = this[parts[0].trim()] // initial value of variable
-            delete parts[0] // delete first part for it set added to value
-            for (i = 1; i < parts.length; i++) { // loop for find latest value (if value of variable is object)
-                value = value[parts[i].trim()] // set a value to value variable
-            }
-            return typeof value === "object" ? value.value : value // if it's a object (Reactive variable) return .value if not return self value
-        })
+        replaceVariables(template, this) // replace variables {{ ... }}
 
         template.querySelectorAll("[\\@if]").forEach(e => { // find every @if
             if (eval(e.getAttribute("@if"))) { // check @if value is true
@@ -125,11 +130,12 @@ class Page { // create parent class for pages
                         passedParams[params[i].split("=")[0]] = params[i].split("=")[1] // add parameter name and value to passedParams variable
                     }
                 }
-                e.addEventListener("click", () => { this.redirect(this.url(name, passedParams)) }) // add event listener to element to redirect when clicked
+                e.setAttribute("sl-goto", this.url(name, passedParams)) // set route to singlight goto attribute
             }
             else {
-                e.addEventListener("click", () => { this.redirect(route) }) // add event listener to element to redirect when clicked
+                e.setAttribute("sl-goto", route) // set route to singlight goto attribute
             }
+            e.addEventListener("click", e => { this.redirect(e.target.getAttribute("sl-goto")) }) // add event listener to element to redirect when clicked
             e.removeAttribute("@route") // remove @route attribute
         })
     }
