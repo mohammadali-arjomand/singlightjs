@@ -33,5 +33,8 @@ app.start();
 # Documentation
 [Click here](https://github.com/mohammadali-arjomand/singlightjs/wiki) for see Documentation.
 
+# Donate
+<a href="https://www.coffeebede.com/mohammadali-arjomand"><img class="img-fluid" height="70px" src="https://coffeebede.ir/DashboardTemplateV2/app-assets/images/banner/default-yellow.svg" /></a>
+
 # License
 MIT License - Copyright (c) 2023, MohammadAli Arjomand
