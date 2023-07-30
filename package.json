@@ -1,6 +1,6 @@
 {
   "name": "@mohammadali-arjomand/singlightjs",
-  "version": "4.6.4",
+  "version": "4.6.5",
   "description": "Singlight is a light-weight, open-source, free, powerful and easy-to-use Javascript library for creating SPAs",
   "main": "scripts/singlight.min.js",
   "directories": {
