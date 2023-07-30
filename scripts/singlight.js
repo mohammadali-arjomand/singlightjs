@@ -72,12 +72,12 @@ class Page { // create parent class for pages
         let variables, el, vars // initial for variables (parameters) and new element builded
         template.querySelectorAll("[\\@for]").forEach(e => { // start loop of every @for
             variables = e.getAttribute("@for").split(" of ") // extract for value
-            for (let i of this[variables[1].trim()]) { // really 'for' for make elements
+            for (let i in this[variables[1].trim()].iAmReactive === true ? this[variables[1].trim()].value : this[variables[1].trim()]) { // really 'for' for make elements
                 el = document.createElement(e.nodeName) // make new element with main element name
                 el.innerHTML = e.innerHTML // set new element inner by main element inner
                 el = e.parentNode.insertBefore(el, e) // insert new element before main element
                 vars = this // set this data to vars
-                vars[variables[0].trim()] = i // inject variable value in page class
+                vars[variables[0].trim()] = this[variables[1].trim()].iAmReactive === true ? this[variables[1].trim()].value[i] : this[variables[1].trim()][i] // inject variable value in page class
                 replaceVariables(el, vars) // replace variables {{ ... }}
             }
             e.parentNode.removeChild(e) // remove new element
@@ -142,6 +142,7 @@ class Page { // create parent class for pages
 }
 
 class Reactive { // reactivity class
+    iAmReactive = true;
     constructor(value) {
         this.value = value // initial set value
     }
