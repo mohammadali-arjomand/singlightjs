@@ -28,7 +28,7 @@ app.start();
 [Click here](https://github.com/mohammadali-arjomand/singlightjs-examples) for see all SinglightJs examples.
 
 # Installation
-[Click here](https://github.com/mohammadali-arjomand/singlightjs/wiki/Installation) and choose a installation method and perform
+[Click here](https://github.com/mohammadali-arjomand/singlightjs/wiki#installation) and install SinglightJs
 
 # Documentation
 [Click here](https://github.com/mohammadali-arjomand/singlightjs/wiki) for see Documentation.
