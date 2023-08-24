@@ -69,15 +69,25 @@ class Page { // create parent class for pages
             })
         }
 
-        let variables, el, vars // initial for variables (parameters) and new element built
+        let variables, el, vars, attr, key, value // initial for variables (parameters) and new element built
         template.querySelectorAll("[sl-for]").forEach(e => { // start loop of every sl-for
             variables = e.getAttribute("sl-for").split(" of ") // extract for value
             for (let i in this[variables[1].trim()]) { // really 'for' for make elements
                 el = document.createElement(e.nodeName) // make new element with main element name
+                for (attr of e.getAttributeNames()) {
+                    if (attr !== "sl-for") el.setAttribute(attr, e.getAttribute(attr));
+                }
                 el.innerHTML = e.innerHTML // set new element inner by main element inner
                 el = e.parentNode.insertBefore(el, e) // insert new element before main element
                 vars = this // set this data to vars
-                vars[variables[0].trim()] = this[variables[1].trim()][i] // inject variable value in page class
+                if (variables[0].includes(":")) {
+                    key = variables[0].split(":")[0].trim()
+                    value = variables[0].split(":")[1].trim()
+                    vars[key] = i
+                    vars[value] = this[variables[1].trim()][i]
+                }
+                else
+                    vars[variables[0].trim()] = this[variables[1].trim()][i] // inject variable value in page class
                 replaceVariables(el, vars) // replace variables {{ ... }}
             }
             e.parentNode.removeChild(e) // remove new element
@@ -230,10 +240,14 @@ class Singlight { // singlight (main class)
     router(router) {
         this.router = router // set router
     }
+    hooks(hooks) {
+        this.hooks = hooks;
+    }
     mount(on) {
         element = document.querySelector(on) // set element
     }
     start() { // main method ...
+        if (this.hooks.beforeMount !== undefined) this.hooks.beforeMount();
         let route = window.location.pathname.substring(this.router.root.length, window.location.pathname.length) // get pathname and remove root
         let result = this.router.isMatch(route) // find match router
         if(result !== null) { // check result defined
@@ -268,6 +282,7 @@ class Singlight { // singlight (main class)
                 element.innerHTML = "<h1>404 Not Found</h1>" // show default 404 page
             }
         }
+        if (this.hooks.afterMount !== undefined) this.hooks.afterMount()
     }
 }
 
