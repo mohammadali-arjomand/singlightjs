@@ -1,11 +1,11 @@
-var activePage = null, element = null // create global variables
+let activePage = null, element = null; // create global variables
 
 class Page { // create parent class for pages
     token = { // token manager object
         set(token) { localStorage.setItem("singlightApiTokenManager", token) }, // set token to local storage
         get() { return localStorage.getItem("singlightApiTokenManager") }, // get token from local storage
         remove() { localStorage.removeItem("singlightApiTokenManager") }, // remove token from local storage
-        check() { return localStorage.getItem("singlightApiTokenManager") === null ? false : true } // check token is exists in local storage
+        check() { return localStorage.getItem("singlightApiTokenManager") !== null } // check token is exists in local storage
     }
     redirect(to) { // redirect to another routes by url
         to = to.substring(0,1) !== "/" ? "/" + to : to // add slash before url if is not exists
