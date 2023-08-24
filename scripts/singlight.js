@@ -54,21 +54,6 @@ class Page { // create parent class for pages
         return el
     }
     render(template) { // template builder (renderer engine)
-        function replaceVariables(template, variables) { // replace variables {{ ... }}
-            template.innerHTML = template.innerHTML.replace(/(\{\{.*?\}\})/g, (m,find) => { // replace {{ ... }} by variable value
-                find = find.substring(2, find.length-2) // remove '{{' and '}}' from finded
-                let // create some variables
-                    i, // i variable for loop
-                    parts = find.split("."), // split variable name for access to object
-                    value = variables[parts[0].trim()] // initial value of variable
-                delete parts[0] // delete first part for it set added to value
-                for (i = 1; i < parts.length; i++) { // loop for find latest value (if value of variable is object)
-                    value = value[parts[i].trim()] // set a value to value variable
-                }
-                return value // return value
-            })
-        }
-
         let variables, el, vars, attr, key, value // initial for variables (parameters) and new element built
         template.querySelectorAll("[sl-for]").forEach(e => { // start loop of every sl-for
             variables = e.getAttribute("sl-for").split(" of ") // extract for value
@@ -79,16 +64,17 @@ class Page { // create parent class for pages
                 }
                 el.innerHTML = e.innerHTML // set new element inner by main element inner
                 el = e.parentNode.insertBefore(el, e) // insert new element before main element
-                vars = this // set this data to vars
                 if (variables[0].includes(":")) {
                     key = variables[0].split(":")[0].trim()
                     value = variables[0].split(":")[1].trim()
-                    vars[key] = i
-                    vars[value] = this[variables[1].trim()][i]
+                    this[key] = i
+                    this[value] = this[variables[1].trim()][i]
                 }
                 else
-                    vars[variables[0].trim()] = eval(variables[1].trim())[i] // inject variable value in page class
-                replaceVariables(el, vars) // replace variables {{ ... }}
+                    this[variables[0].trim()] = eval(variables[1].trim())[i] // inject variable value in page class
+                el.innerHTML = el.innerHTML.replace(/(\{\{.*?\}\})/g, (m,find) => { // replace {{ ... }} by variable value
+                    return eval(find.substring(2, find.length-2).trim()) // return value
+                })
             }
             e.parentNode.removeChild(e) // remove new element
         })
@@ -97,7 +83,9 @@ class Page { // create parent class for pages
             e.innerHTML = this.load(e.getAttribute("sl-template")) // load template
         })
 
-        replaceVariables(template, this) // replace variables {{ ... }}
+        template.innerHTML = template.innerHTML.replace(/(\{\{.*?\}\})/g, (m,find) => { // replace {{ ... }} by variable value
+            return eval(find.substring(2, find.length-2).trim()) // return value
+        })
 
         template.querySelectorAll("[sl-if]").forEach(e => { // find every sl-if
             if (eval(e.getAttribute("sl-if"))) { // check sl-if value is true
