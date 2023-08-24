@@ -65,19 +65,19 @@ class Page { // create parent class for pages
                 for (i = 1; i < parts.length; i++) { // loop for find latest value (if value of variable is object)
                     value = value[parts[i].trim()] // set a value to value variable
                 }
-                return typeof value === "object" ? value.value : value // if it's a object (Reactive variable) return .value if not return self value
+                return value // return value
             })
         }
 
-        let variables, el, vars // initial for variables (parameters) and new element builded
+        let variables, el, vars // initial for variables (parameters) and new element built
         template.querySelectorAll("[\\@for]").forEach(e => { // start loop of every @for
             variables = e.getAttribute("@for").split(" of ") // extract for value
-            for (let i in this[variables[1].trim()].iAmReactive === true ? this[variables[1].trim()].value : this[variables[1].trim()]) { // really 'for' for make elements
+            for (let i in this[variables[1].trim()]) { // really 'for' for make elements
                 el = document.createElement(e.nodeName) // make new element with main element name
                 el.innerHTML = e.innerHTML // set new element inner by main element inner
                 el = e.parentNode.insertBefore(el, e) // insert new element before main element
                 vars = this // set this data to vars
-                vars[variables[0].trim()] = this[variables[1].trim()].iAmReactive === true ? this[variables[1].trim()].value[i] : this[variables[1].trim()][i] // inject variable value in page class
+                vars[variables[0].trim()] = this[variables[1].trim()][i] // inject variable value in page class
                 replaceVariables(el, vars) // replace variables {{ ... }}
             }
             e.parentNode.removeChild(e) // remove new element
@@ -157,23 +157,6 @@ class Page { // create parent class for pages
                     e.parentNode.removeChild(e);
                 })
             }
-        }
-    }
-}
-
-class Reactive { // reactivity class
-    iAmReactive = true;
-    constructor(value) {
-        this.value = value // initial set value
-    }
-    get value() {
-        return this._value // value getter
-    }
-    set value(value) {
-        this._value = value // value setter
-        if (activePage !== null) { // check a page is active to rebuild this page
-            element.innerHTML = activePage.template() // set page template to element
-            activePage.render(element) // render page
         }
     }
 }
@@ -289,4 +272,4 @@ class Singlight { // singlight (main class)
 }
 
 export default Singlight;
-export { Page, Reactive, Router } // export classes
+export { Page, Router } // export classes
