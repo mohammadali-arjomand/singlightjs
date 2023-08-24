@@ -10,7 +10,7 @@ class Page { // create parent class for pages
     redirect(to) { // redirect to another routes by url
         to = to.substring(0,1) !== "/" ? "/" + to : to // add slash before url if is not exists
         to = to.substring(0,this.root.length) !== this.root ? this.root + to : to // add root directory to url if is not exists
-        window.history.pushState({}, "", to) // push new url to addressbar
+        window.history.pushState({}, "", to) // push new url to address bar
         this.singlight.start() // restart loading page
     }
     back() { // redirect back
@@ -19,7 +19,7 @@ class Page { // create parent class for pages
     }
     url(name, variables) { // make url by name
         for (let founded of this.names) { // loop for found name
-            if (founded.name == name) { // check founded name is passed name
+            if (founded.name === name) { // check founded name is passed name
                 let url = founded.uri.replace(/(\{.*?\}\/)/g, (m,find) => { // replace { ... } by values
                     return variables[find.substring(1,find.length-2).trim()] + "/" // find value
                 })
@@ -138,6 +138,26 @@ class Page { // create parent class for pages
             e.addEventListener("click", e => { this.redirect(e.target.getAttribute("sl-goto")) }) // add event listener to element to redirect when clicked
             e.removeAttribute("@route") // remove @route attribute
         })
+
+        let componentDiv, componentAttrs = {}, componentAttr;
+        if (this.components !== undefined) {
+            for (let componentName in this.components) {
+                componentDiv = document.createElement("div");
+                template.querySelectorAll("x-" + componentName).forEach(e => {
+                    for (componentAttr of e.getAttributeNames()) {
+                        componentAttrs[componentAttr] = e.getAttribute(componentAttr);
+                    }
+                    e.querySelectorAll("x-slot[name]").forEach(el => {
+                        componentAttrs[el.getAttribute("name")] = el.innerHTML;
+                        el.parentNode.removeChild(el)
+                    })
+                    componentAttrs.slot = e.innerHTML;
+                    componentDiv.innerHTML = this.components[componentName].apply(componentAttrs);
+                    e.parentNode.insertBefore(componentDiv, e);
+                    e.parentNode.removeChild(e);
+                })
+            }
+        }
     }
 }
 
@@ -268,4 +288,5 @@ class Singlight { // singlight (main class)
     }
 }
 
-export { Page, Reactive, Router, Singlight } // export classes
+export default Singlight;
+export { Page, Reactive, Router } // export classes
