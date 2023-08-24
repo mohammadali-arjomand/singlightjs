@@ -70,8 +70,8 @@ class Page { // create parent class for pages
         }
 
         let variables, el, vars // initial for variables (parameters) and new element built
-        template.querySelectorAll("[\\@for]").forEach(e => { // start loop of every @for
-            variables = e.getAttribute("@for").split(" of ") // extract for value
+        template.querySelectorAll("[sl-for]").forEach(e => { // start loop of every sl-for
+            variables = e.getAttribute("sl-for").split(" of ") // extract for value
             for (let i in this[variables[1].trim()]) { // really 'for' for make elements
                 el = document.createElement(e.nodeName) // make new element with main element name
                 el.innerHTML = e.innerHTML // set new element inner by main element inner
@@ -83,44 +83,44 @@ class Page { // create parent class for pages
             e.parentNode.removeChild(e) // remove new element
         })
 
-        template.querySelectorAll("[\\@template]").forEach(e => { // loop of every @template
-            e.innerHTML = this.load(e.getAttribute("@template")) // load template
+        template.querySelectorAll("[sl-template]").forEach(e => { // loop of every sl-template
+            e.innerHTML = this.load(e.getAttribute("sl-template")) // load template
         })
 
         replaceVariables(template, this) // replace variables {{ ... }}
 
-        template.querySelectorAll("[\\@if]").forEach(e => { // find every @if
-            if (eval(e.getAttribute("@if"))) { // check @if value is true
-                e.removeAttribute("@if") // remove @if attribute
+        template.querySelectorAll("[sl-if]").forEach(e => { // find every sl-if
+            if (eval(e.getAttribute("sl-if"))) { // check sl-if value is true
+                e.removeAttribute("sl-if") // remove sl-if attribute
             }
             else {
-                e.parentNode.removeChild(e) // remove @if element
+                e.parentNode.removeChild(e) // remove sl-if element
             }
         })
 
-        template.querySelectorAll("[\\@display]").forEach(e => { // find every @display           
-            if (!eval(e.getAttribute("@display"))) { // check @display value is false
+        template.querySelectorAll("[sl-display]").forEach(e => { // find every sl-display
+            if (!eval(e.getAttribute("sl-display"))) { // check sl-display value is false
                 e.style.display = "none" // set display to none
             }
-            e.removeAttribute("@display") // remove @display attribute
+            e.removeAttribute("sl-display") // remove sl-display attribute
         })
 
-        let event // initial event variable for @event
-        template.querySelectorAll("[\\@event]").forEach(e => { // find every @event
-            event = e.getAttribute("@event").split(":") // get event type and event handler
-            e.addEventListener(event[0].trim(), e => this[event[1].trim()](e)) // add event listener to @event element
-            e.removeAttribute("@event") // remove @event attribute
+        let event // initial event variable for sl-event
+        template.querySelectorAll("[sl-event]").forEach(e => { // find every sl-event
+            event = e.getAttribute("sl-event").split(":") // get event type and event handler
+            e.addEventListener(event[0].trim(), e => this[event[1].trim()](e)) // add event listener to sl-event element
+            e.removeAttribute("sl-event") // remove sl-event attribute
         })
 
-        template.querySelectorAll("[\\@back]").forEach(e => {
+        template.querySelectorAll("[sl-back]").forEach(e => {
             e.addEventListener("click", () => this.back());
-            e.removeAttribute("@back");
+            e.removeAttribute("sl-back");
         })
 
-        let route, name, params, passedParams = {} // initial route for get @route, name for route-name, params for route parameters, passesParams for convert params to object
-        template.querySelectorAll("[\\@route]").forEach(e => { // find every @route
-            route = e.getAttribute("@route") // get route value
-            if (route.trim().substring(0,1) === "_") { // check @route value is a url or route name and parameters
+        let route, name, params, passedParams = {} // initial route for get sl-route, name for route-name, params for route parameters, passesParams for convert params to object
+        template.querySelectorAll("[sl-route]").forEach(e => { // find every sl-route
+            route = e.getAttribute("sl-route") // get route value
+            if (route.trim().substring(0,1) === "_") { // check sl-route value is a url or route name and parameters
                 name = route.split(":")[0] // get name
                 name = name.substring(1,name.length) // remove _ from first of name
                 if (route.includes(":")) {
@@ -136,7 +136,7 @@ class Page { // create parent class for pages
                 e.setAttribute("sl-goto", route) // set route to singlight goto attribute
             }
             e.addEventListener("click", e => { this.redirect(e.target.getAttribute("sl-goto")) }) // add event listener to element to redirect when clicked
-            e.removeAttribute("@route") // remove @route attribute
+            e.removeAttribute("sl-route") // remove sl-route attribute
         })
 
         let componentDiv, componentAttrs = {}, componentAttr;
@@ -219,7 +219,7 @@ class Router { // create router
                 for (let key in keys) { // loop on keys
                     variables[keys[key].substring(1, keys[key].length-2).trim()] = values[key].substring(0, values[key].length-1) // set variable.key to value
                 }
-                return {route,variables} // return finded route and variables
+                return {route,variables} // return found route and variables
             }
         }
         return null // return null if route not found
