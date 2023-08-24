@@ -38,23 +38,23 @@ class Page { // create parent class for pages
     title(title) { // title helper
         document.title = title // set new title
     }
-    elementor(elements) {
-        let el = document.createElement(elements.name)
-        if (elements.attributes !== undefined) {
-            for (let attribute in elements.attributes) {
-                el.setAttribute(attribute, elements.attributes[attribute]);
+    elementor(elements) { // elementor helper
+        let el = document.createElement(elements.name) // create parent element
+        if (elements.attributes !== undefined) { // check attribute was set
+            for (let attribute in elements.attributes) { // loop on attributes
+                el.setAttribute(attribute, elements.attributes[attribute]); // set attribute
             }
         }
-        if (elements.text !== undefined) el.innerHTML = elements.text
-        if (elements.children !== undefined) {
-            for (let i in elements.children) {
-                el.appendChild(this.elementor(elements.children[i]))
+        if (elements.text !== undefined) el.innerHTML = elements.text // set text if is not undefined
+        if (elements.children !== undefined) { // check children was set
+            for (let i in elements.children) { // loop on children
+                el.appendChild(this.elementor(elements.children[i])) // add child
             }
         }
-        return el
+        return el // return created element
     }
     render(template) { // template builder (renderer engine)
-        let variables, el, vars, attr, key, value // initial for variables (parameters) and new element built
+        let variables, el, attr, key, value // initial for variables (parameters) and new element built
         template.querySelectorAll("[sl-for]").forEach(e => { // start loop of every sl-for
             variables = e.getAttribute("sl-for").split(" of ") // extract for value
             for (let i in eval(variables[1].trim())) { // 'for' for make elements
@@ -64,11 +64,11 @@ class Page { // create parent class for pages
                 }
                 el.innerHTML = e.innerHTML // set new element inner by main element inner
                 el = e.parentNode.insertBefore(el, e) // insert new element before main element
-                if (variables[0].includes(":")) {
-                    key = variables[0].split(":")[0].trim()
-                    value = variables[0].split(":")[1].trim()
-                    this[key] = i
-                    this[value] = this[variables[1].trim()][i]
+                if (variables[0].includes(":")) { // check arguments contains colon (:)
+                    key = variables[0].split(":")[0].trim() // set key variable name
+                    value = variables[0].split(":")[1].trim() // set value variable name
+                    this[key] = i // set key variable value
+                    this[value] = this[variables[1].trim()][i] // set value variable value
                 }
                 else
                     this[variables[0].trim()] = eval(variables[1].trim())[i] // inject variable value in page class
@@ -118,7 +118,7 @@ class Page { // create parent class for pages
         let route, name, params, passedParams = {} // initial route for get sl-route, name for route-name, params for route parameters, passesParams for convert params to object
         template.querySelectorAll("[sl-route]").forEach(e => { // find every sl-route
             route = e.getAttribute("sl-route") // get route value
-            if (route.trim().substring(0,1) === "_") { // check sl-route value is a url or route name and parameters
+            if (route.trim().substring(0,1) === "_") { // check sl-route value is an url or route name and parameters
                 name = route.split(":")[0] // get name
                 name = name.substring(1,name.length) // remove _ from first of name
                 if (route.includes(":")) {
@@ -137,22 +137,22 @@ class Page { // create parent class for pages
             e.removeAttribute("sl-route") // remove sl-route attribute
         })
 
-        let componentDiv, componentAttrs = {}, componentAttr;
-        if (this.components !== undefined) {
-            for (let componentName in this.components) {
-                componentDiv = document.createElement("div");
-                template.querySelectorAll("x-" + componentName).forEach(e => {
-                    for (componentAttr of e.getAttributeNames()) {
-                        componentAttrs[componentAttr] = e.getAttribute(componentAttr);
+        let componentDiv, componentAttrs = {}, componentAttr // initial componentDiv for contains component, componentAttrs for set all attributes and componentAttr for set one attribute
+        if (this.components !== undefined) { // check component field is exists
+            for (let componentName in this.components) { // loop on registered components
+                template.querySelectorAll("x-" + componentName).forEach(e => { //
+                    componentDiv = document.createElement("div") // create parent div
+                    for (componentAttr of e.getAttributeNames()) { // loop on attributes
+                        componentAttrs[componentAttr] = e.getAttribute(componentAttr) // save attribute as params
                     }
-                    e.querySelectorAll("x-slot[name]").forEach(el => {
-                        componentAttrs[el.getAttribute("name")] = el.innerHTML;
-                        el.parentNode.removeChild(el)
+                    e.querySelectorAll("x-slot[name]").forEach(el => { // find slots
+                        componentAttrs[el.getAttribute("name")] = el.innerHTML // set slot inner to params
+                        el.parentNode.removeChild(el) // remove slot
                     })
-                    componentAttrs.slot = e.innerHTML;
-                    componentDiv.innerHTML = this.components[componentName].apply(componentAttrs);
-                    e.parentNode.insertBefore(componentDiv, e);
-                    e.parentNode.removeChild(e);
+                    componentAttrs.slot = e.innerHTML // set main slot to params
+                    componentDiv.innerHTML = this.components[componentName].apply(componentAttrs) // call component function via params
+                    e.parentNode.insertBefore(componentDiv, e) // add created component to component shortcut
+                    e.parentNode.removeChild(e) // remove component shortcut
                 })
             }
         }
@@ -229,13 +229,13 @@ class Singlight { // singlight (main class)
         this.router = router // set router
     }
     hooks(hooks) {
-        this.hooks = hooks
+        this.hooks = hooks // set hooks
     }
     mount(on) {
         element = document.querySelector(on) // set element
     }
     start() { // main method ...
-        if (this.hooks.beforeMount !== undefined) this.hooks.beforeMount()
+        if (this.hooks.beforeMount !== undefined) this.hooks.beforeMount() // call `before mount` hook if is exists
         let route = window.location.pathname.substring(this.router.root.length, window.location.pathname.length) // get pathname and remove root
         let result = this.router.isMatch(route) // find match router
         if(result !== null) { // check result defined
@@ -270,9 +270,9 @@ class Singlight { // singlight (main class)
                 element.innerHTML = "<h1>404 Not Found</h1>" // show default 404 page
             }
         }
-        if (this.hooks.afterMount !== undefined) this.hooks.afterMount()
+        if (this.hooks.afterMount !== undefined) this.hooks.afterMount() // call `after mount` hook if is exists
     }
 }
 
-export default Singlight
-export { Page, Router } // export classes
+export default Singlight // export Singlight class as default
+export { Page, Router } // export other classes
