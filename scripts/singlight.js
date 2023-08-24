@@ -72,7 +72,7 @@ class Page { // create parent class for pages
         let variables, el, vars, attr, key, value // initial for variables (parameters) and new element built
         template.querySelectorAll("[sl-for]").forEach(e => { // start loop of every sl-for
             variables = e.getAttribute("sl-for").split(" of ") // extract for value
-            for (let i in this[variables[1].trim()]) { // really 'for' for make elements
+            for (let i in eval(variables[1].trim())) { // 'for' for make elements
                 el = document.createElement(e.nodeName) // make new element with main element name
                 for (attr of e.getAttributeNames()) {
                     if (attr !== "sl-for") el.setAttribute(attr, e.getAttribute(attr));
@@ -87,7 +87,7 @@ class Page { // create parent class for pages
                     vars[value] = this[variables[1].trim()][i]
                 }
                 else
-                    vars[variables[0].trim()] = this[variables[1].trim()][i] // inject variable value in page class
+                    vars[variables[0].trim()] = eval(variables[1].trim())[i] // inject variable value in page class
                 replaceVariables(el, vars) // replace variables {{ ... }}
             }
             e.parentNode.removeChild(e) // remove new element
