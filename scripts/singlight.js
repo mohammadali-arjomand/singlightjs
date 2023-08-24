@@ -241,13 +241,13 @@ class Singlight { // singlight (main class)
         this.router = router // set router
     }
     hooks(hooks) {
-        this.hooks = hooks;
+        this.hooks = hooks
     }
     mount(on) {
         element = document.querySelector(on) // set element
     }
     start() { // main method ...
-        if (this.hooks.beforeMount !== undefined) this.hooks.beforeMount();
+        if (this.hooks.beforeMount !== undefined) this.hooks.beforeMount()
         let route = window.location.pathname.substring(this.router.root.length, window.location.pathname.length) // get pathname and remove root
         let result = this.router.isMatch(route) // find match router
         if(result !== null) { // check result defined
@@ -286,5 +286,5 @@ class Singlight { // singlight (main class)
     }
 }
 
-export default Singlight;
+export default Singlight
 export { Page, Router } // export classes
