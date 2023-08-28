@@ -156,6 +156,13 @@ class Page { // create parent class for pages
                 })
             }
         }
+
+        template.querySelectorAll("[sl-style]").forEach(e => {
+            let styles = eval(e.getAttribute("sl-style"))
+            for (let style in  styles) {
+                e.style[style] = styles[style];
+            }
+        })
     }
 }
 
