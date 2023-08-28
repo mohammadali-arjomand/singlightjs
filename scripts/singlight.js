@@ -38,6 +38,15 @@ class Page { // create parent class for pages
     title(title) { // title helper
         document.title = title // set new title
     }
+    style(name) {
+        let link = document.querySelector("link[rel=stylesheet]")
+        if (link === null) {
+            link = document.createElement("link")
+            link.rel = "stylesheet"
+            document.head.appendChild(link)
+        }
+        link.href = `./Styles/${name}.css`;
+    }
     elementor(elements) { // elementor helper
         let el = document.createElement(elements.name) // create parent element
         if (elements.attributes !== undefined) { // check attribute was set
@@ -103,11 +112,11 @@ class Page { // create parent class for pages
             e.removeAttribute("sl-display") // remove sl-display attribute
         })
 
-        let event // initial event variable for sl-event
-        template.querySelectorAll("[sl-event]").forEach(e => { // find every sl-event
-            event = e.getAttribute("sl-event").split(":") // get event type and event handler
-            e.addEventListener(event[0].trim(), e => this[event[1].trim()](e)) // add event listener to sl-event element
-            e.removeAttribute("sl-event") // remove sl-event attribute
+        let event // initial event variable for sl-on
+        template.querySelectorAll("[sl-on]").forEach(e => { // find every sl-on
+            event = e.getAttribute("sl-on").split(":") // get event type and event handler
+            e.addEventListener(event[0].trim(), $ => eval(event[1].trim())) // add event listener to sl-on element
+            e.removeAttribute("sl-on") // remove sl-on attribute
         })
 
         template.querySelectorAll("[sl-back]").forEach(e => {
