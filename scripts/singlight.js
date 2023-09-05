@@ -63,19 +63,18 @@ class Page { // create parent class for pages
         return el // return created element
     }
     render(template) { // template builder (renderer engine)
-        let variables, el, attr, key, value // initial for variables (parameters) and new element built
         template.querySelectorAll("[sl-for]").forEach(e => { // start loop of every sl-for
-            variables = e.getAttribute("sl-for").split(" of ") // extract for value
+            let variables = e.getAttribute("sl-for").split(" of ") // extract for value
             for (let i in eval(variables[1].trim())) { // 'for' for make elements
-                el = document.createElement(e.nodeName) // make new element with main element name
-                for (attr of e.getAttributeNames()) {
+                let el = document.createElement(e.nodeName) // make new element with main element name
+                for (let attr of e.getAttributeNames()) {
                     if (attr !== "sl-for") el.setAttribute(attr, e.getAttribute(attr));
                 }
                 el.innerHTML = e.innerHTML // set new element inner by main element inner
                 el = e.parentNode.insertBefore(el, e) // insert new element before main element
                 if (variables[0].includes(":")) { // check arguments contains colon (:)
-                    key = variables[0].split(":")[0].trim() // set key variable name
-                    value = variables[0].split(":")[1].trim() // set value variable name
+                    let key = variables[0].split(":")[0].trim() // set key variable name
+                    let value = variables[0].split(":")[1].trim() // set value variable name
                     this[key] = i // set key variable value
                     this[value] = this[variables[1].trim()][i] // set value variable value
                 }
@@ -112,9 +111,8 @@ class Page { // create parent class for pages
             e.removeAttribute("sl-display") // remove sl-display attribute
         })
 
-        let event // initial event variable for sl-on
         template.querySelectorAll("[sl-on]").forEach(e => { // find every sl-on
-            event = e.getAttribute("sl-on").split(":") // get event type and event handler
+            let event = e.getAttribute("sl-on").split(":") // get event type and event handler
             e.addEventListener(event[0].trim(), $ => eval(event[1].trim())) // add event listener to sl-on element
             e.removeAttribute("sl-on") // remove sl-on attribute
         })
@@ -124,14 +122,14 @@ class Page { // create parent class for pages
             e.removeAttribute("sl-back");
         })
 
-        let route, name, params, passedParams = {} // initial route for get sl-route, name for route-name, params for route parameters, passesParams for convert params to object
         template.querySelectorAll("[sl-route]").forEach(e => { // find every sl-route
-            route = e.getAttribute("sl-route") // get route value
+            let route = e.getAttribute("sl-route") // get route value
             if (route.trim().substring(0,1) === "_") { // check sl-route value is an url or route name and parameters
-                name = route.split(":")[0] // get name
+                let name = route.split(":")[0] // get name
                 name = name.substring(1,name.length) // remove _ from first of name
+                let passedParams = {} // define passed parameters variable
                 if (route.includes(":")) {
-                    params = route.split(":")[1] // get parameters
+                    let params = route.split(":")[1] // get parameters
                     params = params.split(",") // split parameters
                     for (let i in params) { // loop on the parameters
                         passedParams[params[i].split("=")[0]] = params[i].split("=")[1] // add parameter name and value to passedParams variable
@@ -146,12 +144,12 @@ class Page { // create parent class for pages
             e.removeAttribute("sl-route") // remove sl-route attribute
         })
 
-        let componentDiv, componentAttrs = {}, componentAttr // initial componentDiv for contains component, componentAttrs for set all attributes and componentAttr for set one attribute
         if (this.components !== undefined) { // check component field is exists
             for (let componentName in this.components) { // loop on registered components
                 template.querySelectorAll("sl-" + componentName.replace(/Component/i, "")).forEach(e => { //
-                    componentDiv = document.createElement("div") // create parent div
-                    for (componentAttr of e.getAttributeNames()) { // loop on attributes
+                    let componentDiv = document.createElement("div") // create parent div
+                    let componentAttrs = {} // define component attributes
+                    for (let componentAttr of e.getAttributeNames()) { // loop on attributes
                         componentAttrs[componentAttr] = e.getAttribute(componentAttr) // save attribute as params
                     }
                     e.querySelectorAll("sl-slot[name]").forEach(el => { // find slots
