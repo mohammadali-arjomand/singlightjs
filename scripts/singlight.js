@@ -149,12 +149,12 @@ class Page { // create parent class for pages
         let componentDiv, componentAttrs = {}, componentAttr // initial componentDiv for contains component, componentAttrs for set all attributes and componentAttr for set one attribute
         if (this.components !== undefined) { // check component field is exists
             for (let componentName in this.components) { // loop on registered components
-                template.querySelectorAll("x-" + componentName).forEach(e => { //
+                template.querySelectorAll("sl-" + componentName.replace(/Component/i, "")).forEach(e => { //
                     componentDiv = document.createElement("div") // create parent div
                     for (componentAttr of e.getAttributeNames()) { // loop on attributes
                         componentAttrs[componentAttr] = e.getAttribute(componentAttr) // save attribute as params
                     }
-                    e.querySelectorAll("x-slot[name]").forEach(el => { // find slots
+                    e.querySelectorAll("sl-slot[name]").forEach(el => { // find slots
                         componentAttrs[el.getAttribute("name")] = el.innerHTML // set slot inner to params
                         el.parentNode.removeChild(el) // remove slot
                     })
