@@ -144,6 +144,13 @@ class Page { // create parent class for pages
             e.removeAttribute("sl-route") // remove sl-route attribute
         })
 
+        template.querySelectorAll("[sl-style]").forEach(e => {
+            let styles = eval(e.getAttribute("sl-style"))
+            for (let style in  styles) {
+                e.style[style] = styles[style];
+            }
+        })
+
         if (this.components !== undefined) { // check component field is exists
             for (let componentName in this.components) { // loop on registered components
                 template.querySelectorAll("sl-" + componentName.replace(/Component/i, "")).forEach(e => { //
@@ -163,13 +170,6 @@ class Page { // create parent class for pages
                 })
             }
         }
-
-        template.querySelectorAll("[sl-style]").forEach(e => {
-            let styles = eval(e.getAttribute("sl-style"))
-            for (let style in  styles) {
-                e.style[style] = styles[style];
-            }
-        })
     }
 }
 
