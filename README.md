@@ -8,7 +8,6 @@ Singlight is a light-weight, open-source, free, powerful and easy-to-use Javascr
 - [Examples](https://github.com/mohammadali-arjomand/singlightjs-examples)
 
 # Ecosystem
-- [SinglightAPI](https://github.com/mohammadali-arjomand/singlightapi)
 - [Singlighter](https://github.com/mohammadali-arjomand/singlighter)
 
 # License
