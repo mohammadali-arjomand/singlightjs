@@ -1,4 +1,4 @@
-let activePage = null, element = null; // create global variables
+let activePage, element; // create global variables
 
 class Page { // create parent class for pages
     token = { // token manager object
@@ -32,8 +32,8 @@ class Page { // create parent class for pages
         return document.getElementById(id).innerHTML // find template and return inner of template
     }
     refresh() { // refresh page
-        element.innerHTML = activePage.template() // set page template to element
-        activePage.render(element) // render page
+        this.element.innerHTML = this.template() // set page template to element
+        this.render(this.element) // render page
     }
     title(title) { // title helper
         document.title = title // set new title
@@ -176,7 +176,7 @@ class Page { // create parent class for pages
 class Router { // create router
     root = "";
     constructor() {
-        this.routes = [] // initial routes 
+        this.routes = [] // initial routes
         this.names = [] // initial names
     }
     setRoot(pathname) { // s method for set root of routes
@@ -252,33 +252,33 @@ class Singlight { // singlight (main class)
         if (this.hooks.beforeMount !== undefined) this.hooks.beforeMount() // call `before mount` hook if is exists
         let route = window.location.pathname.substring(this.router.root.length, window.location.pathname.length) // get pathname and remove root
         let result = this.router.isMatch(route) // find match router
+        const loadPage = (page) => { // create an arrow function for don't repeat code
+            activePage = new page() // set active page to customized 403 page
+            activePage.route = result.variables // inject route variables (parameters)
+            activePage.names = this.router.names // inject names
+            activePage.root = this.router.root // inject route
+            activePage.singlight = this // inject singlight class
+            activePage.element = element // inject mounted element
+            if (activePage.setup !== undefined) activePage.setup() // call setup if it's exists
+            element.innerHTML = activePage.template() // set template to element
+            activePage.render(element) // render page
+        }
         if(result !== null) { // check result defined
             if (result.route.accessor !== null && result.route.accessor() === false) { // check accessor is defined and it's false
                 if (this.router.forbidden !== undefined) { // check customized 403 is exists
-                    activePage = new this.router.forbidden() // set active page to customized 403 page
-                    element.innerHTML = activePage.template() // set template to element
-                    activePage.render(element) // render page
+                    loadPage(this.router.forbidden) // make forbidden page
                 }
                 else {
                     element.innerHTML = "<h1>403 Forbidden</h1>" // show default 403 page
                 }
             }
             else { // accessor is true
-                activePage = new result.route.page() // set active page to route page
-                activePage.route = result.variables // inject route variables (parameters)
-                activePage.names = this.router.names // inject names
-                activePage.root = this.router.root // inject route
-                activePage.singlight = this // inject singlight class
-                if (activePage.setup !== undefined) activePage.setup() // call setup if it's exists
-                element.innerHTML = activePage.template() // set template to element
-                activePage.render(element) // render page
+                loadPage(result.route.page) // make normal page
             }
         }
         else { // result is not defined
             if (this.router.notfound !== undefined) { // check customized 404 is exists
-                activePage = new this.router.notfound() // set active page to customized 404 page
-                element.innerHTML = activePage.template() // set template to element
-                activePage.render(element) // render page
+                loadPage(this.router.notfound) // make notfound page
             }
             else {
                 element.innerHTML = "<h1>404 Not Found</h1>" // show default 404 page
