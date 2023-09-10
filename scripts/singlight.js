@@ -150,7 +150,12 @@ class Page { // create parent class for pages
                     let componentDiv = document.createElement("div") // create parent div
                     let componentAttrs = {} // define component attributes
                     for (let componentAttr of e.getAttributeNames()) { // loop on attributes
-                        componentAttrs[componentAttr] = e.getAttribute(componentAttr) // save attribute as params
+                        if (componentAttr.substring(0,1) === ":") {
+                            componentAttrs[componentAttr.replace(":", "")] = eval(e.getAttribute(componentAttr)) // save result of attribute as params
+                        }
+                        else {
+                            componentAttrs[componentAttr] = e.getAttribute(componentAttr) // save attribute as params
+                        }
                     }
                     e.querySelectorAll("sl-slot[name]").forEach(el => { // find slots
                         componentAttrs[el.getAttribute("name")] = el.innerHTML // set slot inner to params
