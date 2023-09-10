@@ -28,9 +28,6 @@ class Page { // create parent class for pages
         }
         return null // return null if name not defined
     }
-    load(id) { // load template helper
-        return document.getElementById(id).innerHTML // find template and return inner of template
-    }
     refresh() { // refresh page
         this.element.innerHTML = this.template() // set page template to element
         this.render(this.element) // render page
@@ -85,10 +82,6 @@ class Page { // create parent class for pages
                 })
             }
             e.parentNode.removeChild(e) // remove new element
-        })
-
-        template.querySelectorAll("[sl-template]").forEach(e => { // loop of every sl-template
-            e.innerHTML = this.load(e.getAttribute("sl-template")) // load template
         })
 
         template.innerHTML = template.innerHTML.replace(/(\{\{.*?\}\})/g, (m,find) => { // replace {{ ... }} by variable value
