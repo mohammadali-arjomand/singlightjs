@@ -258,6 +258,9 @@ class Singlight { // singlight (main class)
             activePage.singlight = this // inject singlight class
             activePage.element = element // inject mounted element
             if (activePage.setup !== undefined) activePage.setup() // call setup if it's exists
+            window.addEventListener("popstate", e => {
+                this.start()
+            })
             element.innerHTML = activePage.template() // set template to element
             activePage.render(element) // render page
         }
