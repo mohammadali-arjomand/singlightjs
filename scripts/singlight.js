@@ -303,6 +303,10 @@ class Singlight { // singlight (main class)
         this.hooks = hooks // set hooks
     }
 
+    accessors(accessors) {
+        this.accessors = accessors;
+    }
+
     mount(on) {
         element = document.querySelector(on) // set element
     }
@@ -326,7 +330,27 @@ class Singlight { // singlight (main class)
             activePage.render(element) // render page
         }
         if (result !== null) { // check result defined
-            if (result.route.accessor !== null && result.route.accessor() === false) { // check accessor is defined and it's false
+            let accessor = result.route.accessor
+            if (typeof accessor === "string") accessor = accessor.split(",")
+            if (accessor !== null && typeof accessor === "object") {
+                let activeAccessors = []
+                for (let theAccessor of accessor) {
+                    for (let registeredAccessor in this.accessors) {
+                        if (theAccessor === registeredAccessor.replace(/Accessor/i, "")) {
+                            activeAccessors.push(this.accessors[registeredAccessor])
+                        }
+                    }
+                }
+                accessor = () => {
+                    for (let activeAccessor of activeAccessors) {
+                        if (activeAccessor() === false) {
+                            return false
+                        }
+                    }
+                    return true
+                }
+            }
+            if (accessor !== null && accessor() === false) { // check accessor is defined and it's false
                 if (this.router.forbidden !== undefined) { // check customized 403 is exists
                     loadPage(this.router.forbidden) // make forbidden page
                 } else {
