@@ -88,11 +88,57 @@ class Page { // create parent class for pages
             return eval(find.substring(2, find.length-2).trim()) // return value
         })
 
-        template.querySelectorAll("[sl-if]").forEach(e => { // find every sl-if
+        const whileForIf = (el, remove) => {
+            let removes = []
+            while (el !== null) {
+                if (el.getAttribute("sl-elif") !== null) {
+                    if (!remove) {
+                        if (eval(el.getAttribute("sl-elif"))) { // check sl-elif value is true
+                            el.removeAttribute("sl-elif")
+                            remove = true
+                        }
+                        else {
+                            removes.push(el)
+                        }
+                    }
+                    else {
+                        removes.push(el)
+                    }
+                    el = el.nextElementSibling
+                }
+                else if (el.getAttribute("sl-else") !== null) {
+                    if (remove) {
+                        removes.push(el)
+                    }
+                    else {
+                        el.removeAttribute("sl-else")
+                    }
+                    break
+                }
+                else {
+                    break
+                }
+            }
+            for (let rm of removes) {
+                rm.remove()
+            }
+        }
+
+        template.querySelectorAll("[sl-if]").forEach(e => { // find every sl-ifg
             if (eval(e.getAttribute("sl-if"))) { // check sl-if value is true
                 e.removeAttribute("sl-if") // remove sl-if attribute
+                // if (e.nextElementSibling !== null && e.nextElementSibling.getAttribute("sl-else") !== null) {
+                //     e.parentNode.removeChild(e.nextElementSibling)
+                // }
+                whileForIf(e.nextElementSibling, true)
             }
             else {
+                if (e.nextElementSibling !== null && e.nextElementSibling.getAttribute("sl-else") !== null) {
+                    e.nextElementSibling.removeAttribute("sl-else")
+                }
+                else {
+                    whileForIf(e.nextElementSibling, false)
+                }
                 e.parentNode.removeChild(e) // remove sl-if element
             }
         })
