@@ -137,9 +137,6 @@ class Page { // create parent class for pages
         template.querySelectorAll("[sl-if]").forEach(e => { // find every sl-ifg
             if (eval(e.getAttribute("sl-if"))) { // check sl-if value is true
                 e.removeAttribute("sl-if") // remove sl-if attribute
-                // if (e.nextElementSibling !== null && e.nextElementSibling.getAttribute("sl-else") !== null) {
-                //     e.parentNode.removeChild(e.nextElementSibling)
-                // }
                 whileForIf(e.nextElementSibling, true)
             } else {
                 if (e.nextElementSibling !== null && e.nextElementSibling.getAttribute("sl-else") !== null) {
@@ -160,7 +157,16 @@ class Page { // create parent class for pages
 
         template.querySelectorAll("[sl-on]").forEach(e => { // find every sl-on
             let event = e.getAttribute("sl-on").split(":") // get event type and event handler
-            e.addEventListener(event[0].trim(), $ => eval(event[1].trim())) // add event listener to sl-on element
+            event[0] = event[0].split(".")
+            e.addEventListener(event[0][0].trim(), $ => {
+                if (event[0][1] === "prevent") {
+                    $.preventDefault()
+                }
+                eval(event[1])
+                if (event[0][1] === "refresh") {
+                    this.refresh()
+                }
+            }) // add event listener to sl-on element
             e.removeAttribute("sl-on") // remove sl-on attribute
         })
 
@@ -220,7 +226,6 @@ class Page { // create parent class for pages
                     })
                     componentAttrs.slot = e.innerHTML // set main slot to params
                     componentAttrs.setDefault = (name, value) => { if (componentAttrs[name] === undefined) componentAttrs[name] = value }
-                    console.log(attributes)
                     componentAttrs.attributes = attributes
                     componentDiv.innerHTML = this.components[componentName].apply(componentAttrs) // call component function via params
                     e.parentNode.insertBefore(componentDiv, e) // add created component to component shortcut
