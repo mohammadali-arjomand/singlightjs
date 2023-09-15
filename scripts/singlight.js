@@ -247,8 +247,8 @@ class Router { // create router
     }
 
     addRouteError(error, page) { // add route error
-        this.notfound = error == 404 ? page : this.notfound // add 404 route
-        this.forbidden = error == 403 ? page : this.forbidden // add 403 route
+        this.notfound = error === 404 ? page : this.notfound // add 404 route
+        this.forbidden = error === 403 ? page : this.forbidden // add 403 route
     }
 
     addRouteGroup(prefix, routes) { // add route group
