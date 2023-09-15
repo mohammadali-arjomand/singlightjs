@@ -193,6 +193,7 @@ class Page { // create parent class for pages
                 e.setAttribute("sl-goto", route) // set route to singlight goto attribute
             }
             e.addEventListener("click", e => {
+                e.preventDefault()
                 this.redirect(e.target.getAttribute("sl-goto"))
             }) // add event listener to element to redirect when clicked
             e.removeAttribute("sl-route") // remove sl-route attribute
