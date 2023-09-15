@@ -204,11 +204,14 @@ class Page { // create parent class for pages
                 template.querySelectorAll("sl-" + componentName.replace(/Component/i, "")).forEach(e => { //
                     let componentDiv = document.createElement("div") // create parent div
                     let componentAttrs = {} // define component attributes
+                    let attributes = "";
                     for (let componentAttr of e.getAttributeNames()) { // loop on attributes
                         if (componentAttr.substring(0, 1) === ":") {
                             componentAttrs[componentAttr.replace(":", "")] = eval(e.getAttribute(componentAttr)) // save result of attribute as params
+                            attributes += `${componentAttr.replace(":", "")}="${eval(e.getAttribute(componentAttr))}" `
                         } else {
                             componentAttrs[componentAttr] = e.getAttribute(componentAttr) // save attribute as params
+                            attributes += `${componentAttr}="${e.getAttribute(componentAttr)}" `
                         }
                     }
                     e.querySelectorAll("sl-slot[name]").forEach(el => { // find slots
@@ -216,6 +219,9 @@ class Page { // create parent class for pages
                         el.parentNode.removeChild(el) // remove slot
                     })
                     componentAttrs.slot = e.innerHTML // set main slot to params
+                    componentAttrs.setDefault = (name, value) => { if (componentAttrs[name] === undefined) componentAttrs[name] = value }
+                    console.log(attributes)
+                    componentAttrs.attributes = attributes
                     componentDiv.innerHTML = this.components[componentName].apply(componentAttrs) // call component function via params
                     e.parentNode.insertBefore(componentDiv, e) // add created component to component shortcut
                     e.parentNode.removeChild(e) // remove component shortcut
