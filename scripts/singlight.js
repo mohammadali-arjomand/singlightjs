@@ -336,7 +336,7 @@ class Singlight { // singlight (main class)
                 let activeAccessors = []
                 for (let theAccessor of accessor) {
                     for (let registeredAccessor in this.accessors) {
-                        if (theAccessor === registeredAccessor.replace(/Accessor/i, "")) {
+                        if (theAccessor.toLowerCase() === registeredAccessor.replace(/Accessor/i, "").toLowerCase()) {
                             activeAccessors.push(this.accessors[registeredAccessor])
                         }
                     }
